@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Category } from '@commercetools/platform-sdk';
-import { api } from '../../api/api';
+import { categoryService } from '../../services/categoryService';
 
 export interface CategoryInfo {
   id: string;
@@ -18,7 +18,7 @@ export function useCategories() {
     async function fetchCategories() {
       try {
         setIsLoading(true);
-        const data = await api.getCategories();
+        const data = await categoryService.getAll();
         const categoryMap = new Map<string, CategoryInfo>();
         const rootCategories: CategoryInfo[] = [];
 
