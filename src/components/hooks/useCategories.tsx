@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Category } from '@commercetools/platform-sdk';
+import { Category } from '../../libs/supabase/types';
 import { categoryService } from '../../services/categoryService';
 
 export interface CategoryInfo {
-  id: string;
+  id: number;
   key: string;
   name: string;
   subcategories?: CategoryInfo[];
@@ -19,14 +19,14 @@ export function useCategories() {
       try {
         setIsLoading(true);
         const data = await categoryService.getAll();
-        const categoryMap = new Map<string, CategoryInfo>();
+        const categoryMap = new Map<number, CategoryInfo>();
         const rootCategories: CategoryInfo[] = [];
 
         data.forEach((category: Category) => {
           categoryMap.set(category.id, {
             id: category.id,
-            key: category.key ?? category.id,
-            name: category.name['en-US'] || Object.values(category.name)[0],
+            key: category.name,
+            name: category.name,
             subcategories: [],
           });
         });
@@ -34,8 +34,8 @@ export function useCategories() {
         data.forEach((category: Category) => {
           const currentCategory = categoryMap.get(category.id);
           if (!currentCategory) return;
-          if (category.parent) {
-            const parent = categoryMap.get(category.parent.id);
+          if (category.parent_id) {
+            const parent = categoryMap.get(category.parent_id);
             if (parent) {
               parent.subcategories ??= [];
               parent.subcategories.push(currentCategory);

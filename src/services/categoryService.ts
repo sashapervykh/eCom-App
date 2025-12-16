@@ -1,5 +1,5 @@
-import { Category } from '@commercetools/platform-sdk';
 import { supabase } from '../libs/supabase/client';
+import { Category } from '../libs/supabase/types';
 
 class CategoryService {
   tableName = 'categories';
