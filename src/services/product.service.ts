@@ -26,6 +26,16 @@ class ProductService {
 
     return data;
   }
+
+  async getById(id: number) {
+    const { data, error } = await this.query.select<'*', Product>().eq('id', id).single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  }
 }
 
 export const productService = new ProductService();

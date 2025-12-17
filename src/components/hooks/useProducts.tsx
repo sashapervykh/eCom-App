@@ -1,12 +1,11 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { customerAPI } from '../../api/customer-api';
-import { ProductInfo } from '../../pages/catalog/components/catalog-content/product/types';
 import { INITIAL_CRITERIA } from '../../constants/constants';
 import { getBasketItems, BasketItem } from '../../utilities/return-basket-items';
 import { Image } from '@commercetools/platform-sdk';
 import { formatPrice } from '../../utilities/format-price';
 import { productService } from '../../services/product.service';
-import { Product } from '../../libs/supabase/types';
+import { Product, ProductToDisplay } from '../../libs/supabase/types';
 
 interface CriteriaData {
   sort: string | undefined;
@@ -25,11 +24,11 @@ interface CriteriaData {
 
 interface ProductsContextType {
   productsInfo: Product[] | null;
-  productDetails: ProductInfo | null;
+  productDetails: ProductToDisplay | null;
   isLoading: boolean;
   isResultsLoading: boolean;
   getProductsByCriteria: (criteria: CriteriaData) => void;
-  getProductDetails: (value: string) => void;
+  getProductDetails: (value: number) => void;
   error: boolean;
   notFound: boolean;
   isFiltersOpen: boolean;
@@ -105,7 +104,7 @@ const ProductsContext = createContext<ProductsContextType>({} as ProductsContext
 
 export const ProductsProvider = ({ children }: { children: React.ReactNode }) => {
   const [productsInfo, setProductsInfo] = useState<Product[] | null>(null);
-  const [productDetails, setProductDetails] = useState<ProductInfo | null>(null);
+  const [productDetails, setProductDetails] = useState<ProductToDisplay | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCartLoading, setIsCartLoading] = useState<boolean>(false);
   const [isResultsLoading, setIsResultsLoading] = useState<boolean>(false);
@@ -227,42 +226,40 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
     [isInitialLoad, criteriaData, lastFilters, lastSort, lastSearch],
   );
 
-  const getProductDetails = useCallback(async (key: string) => {
+  const getProductDetails = useCallback(async (id: number) => {
     try {
       setIsLoading(true);
       setProductDetails(null);
       setError(false);
       setNotFound(false);
-      const response = await customerAPI.apiRoot().products().withKey({ key }).get().execute();
-      if (!response.body.masterData.published) {
-        setNotFound(true);
-        return;
-      }
-      const productInfo = response.body;
-      const discountedPrice = productInfo.masterData.current.masterVariant.prices?.[0]?.discounted?.value.centAmount;
-      const price = productInfo.masterData.current.masterVariant.prices?.[0].value.centAmount;
+      const productInfo = await productService.getById(id);
+      // if (!response.body.masterData.published) {
+      //   setNotFound(true);
+      //   return;
+      // }
+
+      const hasDiscount = productInfo.fullPrice !== productInfo.price;
       let currentPrice: string;
       let fullPrice: string | undefined;
 
-      if (discountedPrice) {
-        currentPrice = formatPrice(discountedPrice);
-        fullPrice = price ? formatPrice(price) : undefined;
+      if (hasDiscount) {
+        currentPrice = formatPrice(productInfo.price);
+        fullPrice = formatPrice(productInfo.fullPrice);
       } else {
-        currentPrice = formatPrice(price);
+        currentPrice = formatPrice(productInfo.price);
       }
-      const productDetails: ProductInfo = {
-        id: productInfo.id,
-        key: productInfo.key ?? productInfo.masterData.current.name['en-US'].split(' ').join(''),
-        name: productInfo.masterData.current.name['en-US'],
-        description: productInfo.masterData.current.description?.['en-US'] ?? 'Not provided',
-        price: currentPrice,
-        fullPrice: fullPrice,
-        images: productInfo.masterData.current.masterVariant.images,
-        attributes: productInfo.masterData.current.masterVariant.attributes ?? [],
-        published: productInfo.masterData.published,
+      const product: ProductToDisplay = {
+        ...productInfo,
+        formattedPrice: currentPrice,
+        formattedFullPrice: fullPrice,
+        attributes: {
+          Developer: productInfo.developer,
+          Area: productInfo.area,
+          Floors: productInfo.floors,
+        },
       };
 
-      setProductDetails(productDetails);
+      setProductDetails(product);
       setIsLoading(false);
     } catch (error) {
       const apiError = error as ApiError;

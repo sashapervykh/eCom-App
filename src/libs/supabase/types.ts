@@ -1,6 +1,7 @@
 export interface Category {
   id: number;
   name: string;
+  description: string;
   parent_id: number | null;
 }
 
@@ -12,4 +13,17 @@ export interface Product {
   fullPrice: number;
   description: string;
   images: string[];
+  developer: string;
+  area: number;
+  floors: number;
+}
+
+export interface ProductToDisplay extends Product {
+  formattedPrice: string;
+  formattedFullPrice?: string;
+  attributes: {
+    Area: number;
+    Developer: string;
+    Floors: number;
+  };
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import { Card, Text, Spin } from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
-// import { AddToCartButton } from '../../../../../components/add-to-cart-button/add-to-cart-button';
+import { AddToCartButton } from '../../../../../components/add-to-cart-button/add-to-cart-button';
 import { Product } from '../../../../../libs/supabase/types';
 
 export function ProductCard({ product }: { product: Product }) {
@@ -65,7 +65,9 @@ export function ProductCard({ product }: { product: Product }) {
           </Text>
         </div>
       </div>
-      <div className={styles['actions-wrapper']}>{/* <AddToCartButton product={product} /> */}</div>
+      <div className={styles['actions-wrapper']}>
+        <AddToCartButton product={product} />
+      </div>
     </Card>
   );
 }
