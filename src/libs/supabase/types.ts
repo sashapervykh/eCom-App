@@ -11,5 +11,5 @@ export interface Product {
   price: number;
   fullPrice: number;
   description: string;
-  images: { url: string; label: string }[];
+  images: string[];
 }

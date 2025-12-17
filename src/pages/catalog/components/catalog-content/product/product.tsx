@@ -1,19 +1,19 @@
-// import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
-import { Card, Text } from '@gravity-ui/uikit';
+import { Card, Text, Spin } from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
 // import { AddToCartButton } from '../../../../../components/add-to-cart-button/add-to-cart-button';
 import { Product } from '../../../../../libs/supabase/types';
 
 export function ProductCard({ product }: { product: Product }) {
   const navigate = useNavigate();
-  // const [isImageLoaded, setIsImageLoaded] = useState(false);
-  // const [hasError, setHasError] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  // useEffect(() => {
-  //   setIsImageLoaded(false);
-  //   setHasError(false);
-  // }, [product.id]);
+  useEffect(() => {
+    setIsImageLoaded(false);
+    setHasError(false);
+  }, [product.id]);
   console.log(product);
   return (
     <Card
@@ -24,8 +24,8 @@ export function ProductCard({ product }: { product: Product }) {
       onClick={() => navigate(`/products/${product.id.toString()}`)}
     >
       <div className={styles['content-wrapper']}>
-        {/* <div className={styles['image-wrapper']}>
-          {productInfo.images.map((image, index) => (
+        <div className={styles['image-wrapper']}>
+          {product.images.map((imageUrl, index) => (
             <div key={index}>
               {!isImageLoaded && !hasError && (
                 <div className={styles.loader}>
@@ -34,8 +34,8 @@ export function ProductCard({ product }: { product: Product }) {
               )}
               <img
                 className={styles.image}
-                src={image.url}
-                alt={image.label}
+                src={imageUrl}
+                alt="image of the product"
                 loading="lazy"
                 onLoad={() => setIsImageLoaded(true)}
                 onError={() => setHasError(true)}
@@ -51,7 +51,7 @@ export function ProductCard({ product }: { product: Product }) {
               )}
             </div>
           ))}
-        </div> */}
+        </div>
         <div className={styles['text-wrapper']}>
           <Text variant="body-2" className={styles.text}>
             <b>Name:</b> {product.name}
@@ -65,10 +65,7 @@ export function ProductCard({ product }: { product: Product }) {
           </Text>
         </div>
       </div>
-      <div className={styles['actions-wrapper']}>
-        Button to add
-        {/* <AddToCartButton product={product} /> */}
-      </div>
+      <div className={styles['actions-wrapper']}>{/* <AddToCartButton product={product} /> */}</div>
     </Card>
   );
 }
