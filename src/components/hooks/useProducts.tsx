@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { customerAPI } from '../../api/customer-api';
 import { ProductInfo } from '../../pages/catalog/components/catalog-content/product/types';
-import { returnProductsData } from '../../utilities/return-product-data';
 import { INITIAL_CRITERIA } from '../../constants/constants';
 import { getBasketItems, BasketItem } from '../../utilities/return-basket-items';
 import { Image } from '@commercetools/platform-sdk';
 import { formatPrice } from '../../utilities/format-price';
+import { productService } from '../../services/product.service';
+import { Product } from '../../libs/supabase/types';
 
 interface CriteriaData {
   sort: string | undefined;
@@ -23,7 +24,7 @@ interface CriteriaData {
 }
 
 interface ProductsContextType {
-  productsInfo: ProductInfo[] | null;
+  productsInfo: Product[] | null;
   productDetails: ProductInfo | null;
   isLoading: boolean;
   isResultsLoading: boolean;
@@ -103,7 +104,7 @@ function createFiltersQuery(filters: {
 const ProductsContext = createContext<ProductsContextType>({} as ProductsContextType);
 
 export const ProductsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [productsInfo, setProductsInfo] = useState<ProductInfo[] | null>(null);
+  const [productsInfo, setProductsInfo] = useState<Product[] | null>(null);
   const [productDetails, setProductDetails] = useState<ProductInfo | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCartLoading, setIsCartLoading] = useState<boolean>(false);
@@ -141,7 +142,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         setError(false);
         setNotFound(false);
 
-        const { sort, search, categoryKey, subcategoryKey, filters, limit = 10, offset = 0 } = criteria;
+        const { sort, search, categoryKey, subcategoryKey, filters /* limit = 10, offset = 0 */ } = criteria;
 
         let categoryFilter: string | undefined;
         if (subcategoryKey) {
@@ -211,25 +212,10 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         setLastSearch(search);
         setIsInitialLoad(false);
 
-        const response = await customerAPI
-          .apiRoot()
-          .productProjections()
-          .search()
-          .get({
-            queryArgs: {
-              'text.en-US': search,
-              fuzzy: true,
-              sort,
-              filter: allFilters,
-              limit,
-              offset,
-            },
-          })
-          .execute();
+        const allProductsList = await productService.getAll();
 
-        const productsInfo = returnProductsData(response.body.results);
-        setProductsInfo(productsInfo);
-        setTotalProducts(response.body.total ?? 0);
+        setProductsInfo(allProductsList);
+        setTotalProducts(allProductsList.length);
       } catch (error) {
         console.error(error);
         setError(true);

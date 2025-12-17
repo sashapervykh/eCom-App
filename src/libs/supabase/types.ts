@@ -3,3 +3,13 @@ export interface Category {
   name: string;
   parent_id: number | null;
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  category_id: number | null;
+  price: number;
+  fullPrice: number;
+  description: string;
+  images: { url: string; label: string }[];
+}

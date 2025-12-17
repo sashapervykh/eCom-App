@@ -120,7 +120,7 @@ export function CatalogContent({
   }
 
   const displayData = subcategoryData ?? categoryData;
-
+  console.log(productsInfo);
   return (
     <div className={styles.catalog}>
       <div className={styles['catalog-header']}>

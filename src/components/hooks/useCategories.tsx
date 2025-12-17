@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Category } from '../../libs/supabase/types';
-import { categoryService } from '../../services/categoryService';
+import { categoryService } from '../../services/category.service';
 
 export interface CategoryInfo {
   id: number;

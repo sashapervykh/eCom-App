@@ -1,11 +1,12 @@
 import { ProductCard } from './product';
-import { ProductInfo } from './types';
 import styles from './styles.module.css';
 import { Text } from '@gravity-ui/uikit';
 import { useProducts } from '../../../../../components/hooks/useProducts';
+import { Product } from '../../../../../libs/supabase/types';
 
-export function ProductsList({ productsInfo }: { productsInfo: ProductInfo[] }) {
+export function ProductsList({ productsInfo }: { productsInfo: Product[] }) {
   const { isFiltersOpen } = useProducts();
+  console.log(productsInfo);
   return productsInfo.length === 0 ? (
     <Text
       className={styles.message}
@@ -13,11 +14,9 @@ export function ProductsList({ productsInfo }: { productsInfo: ProductInfo[] }) 
     >{`It seems that we don't have similar products. Try another options...`}</Text>
   ) : (
     <div className={`${styles['product-list']} ${isFiltersOpen ? styles['product-list-hidden'] : ''}`}>
-      {productsInfo
-        .filter((product) => product.published)
-        .map((product) => (
-          <ProductCard key={product.name} productInfo={product} />
-        ))}
+      {productsInfo.map((product) => (
+        <ProductCard key={product.name} product={product} />
+      ))}
     </div>
   );
 }
