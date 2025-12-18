@@ -15,6 +15,7 @@ import { ProductPage } from './pages/product-page/product-page';
 import { UserPage } from './pages/user/UserPage';
 import { CartProvider } from './components/hooks/useCart';
 import { CartPage } from './pages/cart/cart-page';
+import { FiltersProvider } from './components/hooks/useFilters';
 
 export function App() {
   return (
@@ -23,24 +24,26 @@ export function App() {
         <BrowserRouter>
           <AuthProvider>
             <CartProvider>
-              <ProductsProvider>
-                <Routes>
-                  <Route element={<MainLayout />}>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/catalog" element={<CatalogPage />} />
-                    <Route path="/catalog/:categoryKey" element={<CatalogPage />} />
-                    <Route path="/catalog/:categoryKey/:subcategoryKey" element={<CatalogPage />} />
-                    <Route path="/products/:productId" element={<ProductPage />} />
-                    <Route path="/about-us" element={<AboutPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/registration" element={<RegistrationPage />} />
-                    <Route path="/404" element={<NotFoundPage />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                    <Route path="/user" element={<UserPage />} />
-                    <Route path="/cart" element={<CartPage />} />
-                  </Route>
-                </Routes>
-              </ProductsProvider>
+              <FiltersProvider>
+                <ProductsProvider>
+                  <Routes>
+                    <Route element={<MainLayout />}>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/catalog" element={<CatalogPage />} />
+                      <Route path="/catalog/:categoryKey" element={<CatalogPage />} />
+                      <Route path="/catalog/:categoryKey/:subcategoryKey" element={<CatalogPage />} />
+                      <Route path="/products/:productId" element={<ProductPage />} />
+                      <Route path="/about-us" element={<AboutPage />} />
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/registration" element={<RegistrationPage />} />
+                      <Route path="/404" element={<NotFoundPage />} />
+                      <Route path="*" element={<NotFoundPage />} />
+                      <Route path="/user" element={<UserPage />} />
+                      <Route path="/cart" element={<CartPage />} />
+                    </Route>
+                  </Routes>
+                </ProductsProvider>
+              </FiltersProvider>
             </CartProvider>
           </AuthProvider>
         </BrowserRouter>
