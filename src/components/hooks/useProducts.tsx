@@ -213,6 +213,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         const allProductsList = await productService.getFilteredProducts({
           categoryKey: criteria.categoryKey,
           price: criteria.filters.price,
+          area: criteria.filters.area,
         });
 
         setProductsInfo(allProductsList);

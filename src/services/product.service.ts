@@ -17,7 +17,15 @@ class ProductService {
     return data;
   }
 
-  async getFilteredProducts({ categoryKey, price }: { categoryKey?: string; price: [number, number] }) {
+  async getFilteredProducts({
+    categoryKey,
+    price,
+    area,
+  }: {
+    categoryKey?: string;
+    price: [number, number];
+    area: [number, number];
+  }) {
     let query = this.query.select<'*', Product>();
 
     if (categoryKey) {
@@ -26,6 +34,8 @@ class ProductService {
 
     query = query.gte('price', price[0]);
     query = query.lte('price', price[1]);
+    query = query.gte('area', area[0]);
+    query = query.lte('area', area[1]);
 
     const { data, error } = await query;
 
