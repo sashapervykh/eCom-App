@@ -24,12 +24,14 @@ class ProductService {
     area,
     floors,
     developers,
+    sort,
   }: {
     categoryKey?: string;
     price: [number, number];
     area: [number, number];
     floors: Record<string, boolean> | undefined;
     developers?: Record<string, boolean>;
+    sort?: string;
   }) {
     let query = this.query.select<'*', Product>();
 
@@ -45,7 +47,6 @@ class ProductService {
     }
 
     if (developers) {
-      console.log(developers);
       const developersArray = Object.entries(developers)
         .filter((element) => element[1])
         .map((element) => element[0])
@@ -53,7 +54,6 @@ class ProductService {
           return DEVELOPERS_NAMES[developerKey];
         })
         .filter(Boolean);
-      console.log(developersArray);
       if (developersArray.length) query = query.in('developer', developersArray);
     }
 
@@ -61,6 +61,27 @@ class ProductService {
     query = query.lte('price', price[1]);
     query = query.gte('area', area[0]);
     query = query.lte('area', area[1]);
+
+    if (sort && sort !== 'None') {
+      switch (true) {
+        case sort === 'price ASC': {
+          query = query.order('price', { ascending: true });
+          break;
+        }
+        case sort === 'price DESC': {
+          query = query.order('price', { ascending: false });
+          break;
+        }
+        case sort === 'name.en-US ASC': {
+          query = query.order('name', { ascending: true });
+          break;
+        }
+        case sort === 'name.en-US DESC': {
+          query = query.order('name', { ascending: false });
+          break;
+        }
+      }
+    }
 
     const { data, error } = await query;
 
