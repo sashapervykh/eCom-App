@@ -21,15 +21,25 @@ class ProductService {
     categoryKey,
     price,
     area,
+    floors,
   }: {
     categoryKey?: string;
     price: [number, number];
     area: [number, number];
+    floors: Record<string, boolean> | undefined;
+    developers?: { '1': boolean; '2': boolean; '3': boolean };
   }) {
     let query = this.query.select<'*', Product>();
 
     if (categoryKey) {
       query = query.eq('category_id', categoryKey);
+    }
+
+    if (floors) {
+      const floorsArray = Object.entries(floors)
+        .filter((element) => element[1])
+        .map((element) => element[0]);
+      if (floorsArray.length) query = query.in('floors', floorsArray);
     }
 
     query = query.gte('price', price[0]);

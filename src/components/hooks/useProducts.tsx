@@ -209,11 +209,12 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         // setLastSort(sort);
         // setLastSearch(search);
         setIsInitialLoad(false);
-
+        console.log(criteria.filters.floors);
         const allProductsList = await productService.getFilteredProducts({
           categoryKey: criteria.categoryKey,
           price: criteria.filters.price,
           area: criteria.filters.area,
+          floors: criteria.filters.floors,
         });
 
         setProductsInfo(allProductsList);
