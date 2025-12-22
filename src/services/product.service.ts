@@ -1,3 +1,4 @@
+import { DEVELOPERS_NAMES } from '../constants/constants';
 import { supabase } from '../libs/supabase/client';
 import { Product } from '../libs/supabase/types';
 
@@ -22,12 +23,13 @@ class ProductService {
     price,
     area,
     floors,
+    developers,
   }: {
     categoryKey?: string;
     price: [number, number];
     area: [number, number];
     floors: Record<string, boolean> | undefined;
-    developers?: { '1': boolean; '2': boolean; '3': boolean };
+    developers?: Record<string, boolean>;
   }) {
     let query = this.query.select<'*', Product>();
 
@@ -40,6 +42,19 @@ class ProductService {
         .filter((element) => element[1])
         .map((element) => element[0]);
       if (floorsArray.length) query = query.in('floors', floorsArray);
+    }
+
+    if (developers) {
+      console.log(developers);
+      const developersArray = Object.entries(developers)
+        .filter((element) => element[1])
+        .map((element) => element[0])
+        .map((developerKey) => {
+          return DEVELOPERS_NAMES[developerKey];
+        })
+        .filter(Boolean);
+      console.log(developersArray);
+      if (developersArray.length) query = query.in('developer', developersArray);
     }
 
     query = query.gte('price', price[0]);

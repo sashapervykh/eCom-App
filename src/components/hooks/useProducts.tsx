@@ -215,6 +215,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
           price: criteria.filters.price,
           area: criteria.filters.area,
           floors: criteria.filters.floors,
+          developers: criteria.filters.developers,
         });
 
         setProductsInfo(allProductsList);
