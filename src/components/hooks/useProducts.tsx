@@ -210,7 +210,10 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
         // setLastSearch(search);
         setIsInitialLoad(false);
 
-        const allProductsList = await productService.getFilteredProducts(criteria);
+        const allProductsList = await productService.getFilteredProducts({
+          categoryKey: criteria.categoryKey,
+          price: criteria.filters.price,
+        });
 
         setProductsInfo(allProductsList);
         setTotalProducts(allProductsList.length);
