@@ -81,7 +81,7 @@ export function CatalogMenuButton({
                   }}
                   className={styles['menu-item-button']}
                 >
-                  {item.text}
+                  {item.text.toUpperCase()}
                 </button>
                 {Array.isArray(item.items) && item.items.length > 0 && (
                   <ul className={styles['submenu-list']}>

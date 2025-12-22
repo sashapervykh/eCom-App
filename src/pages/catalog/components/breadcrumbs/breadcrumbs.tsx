@@ -23,7 +23,9 @@ export const Breadcrumbs = ({ categoryKey, subcategoryKey, categoryData, subcate
   return (
     <GravityBreadcrumbs className={styles.breadcrumbs} itemComponent={RouterLink}>
       <RouterLink to="/catalog">Catalog</RouterLink>
-      {categoryKey && <RouterLink to={`/catalog/${categoryKey}`}>{categoryData?.name ?? categoryKey}</RouterLink>}
+      {categoryKey && (
+        <RouterLink to={`/catalog/${categoryKey}`}>{categoryData?.name?.toUpperCase() ?? categoryKey}</RouterLink>
+      )}
       {subcategoryKey && categoryKey && <BreadcrumbsItem>{subcategoryData?.name ?? subcategoryKey}</BreadcrumbsItem>}
     </GravityBreadcrumbs>
   );

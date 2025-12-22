@@ -6,7 +6,7 @@ import { Product } from '../../../../../libs/supabase/types';
 
 export function ProductsList({ productsInfo }: { productsInfo: Product[] }) {
   const { isFiltersOpen } = useProducts();
-  console.log(productsInfo);
+
   return productsInfo.length === 0 ? (
     <Text
       className={styles.message}

@@ -17,8 +17,14 @@ class ProductService {
     return data;
   }
 
-  async getByCategory(categoryId: string) {
-    const { data, error } = await this.query.select<'*', Product>().eq('category_id', categoryId);
+  async getFilteredProducts({ categoryKey }: { categoryKey?: string }) {
+    let query = this.query.select<'*', Product>();
+
+    if (categoryKey) {
+      query = query.eq('category_id', categoryKey);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw error;

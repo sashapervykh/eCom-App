@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 interface Filters {
   sort: string | undefined;
@@ -22,13 +21,10 @@ interface FiltersContextType {
 const FiltersContext = createContext<FiltersContextType>({} as FiltersContextType);
 
 export const FiltersProvider = ({ children }: { children: React.ReactNode }) => {
-  const { category } = useParams<{
-    category?: string;
-  }>();
   const [filters, setFilters] = useState<Filters>({
     sort: undefined,
     search: undefined,
-    category: category,
+    category: undefined,
     subcategory: undefined,
     limit: undefined,
     offset: undefined,

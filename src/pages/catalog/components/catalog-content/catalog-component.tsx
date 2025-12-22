@@ -121,7 +121,7 @@ export function CatalogContent({
   }
 
   const displayData = subcategoryData ?? categoryData;
-  console.log(productsInfo);
+
   return (
     <div className={styles.catalog}>
       <div className={styles['catalog-header']}>
@@ -133,8 +133,8 @@ export function CatalogContent({
         />
         {displayData && (
           <>
-            <h1>{displayData.name || 'Catalogue'}</h1>
-            {displayData.description && (
+            <h1>{displayData.name.toUpperCase() || 'Catalogue'}</h1>
+            {displayData.description.toUpperCase() && (
               <Text variant="body-2" className={styles['category-description']}>
                 {displayData.description}
               </Text>

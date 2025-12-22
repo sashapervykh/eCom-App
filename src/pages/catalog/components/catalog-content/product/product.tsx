@@ -14,7 +14,6 @@ export function ProductCard({ product }: { product: Product }) {
     setIsImageLoaded(false);
     setHasError(false);
   }, [product.id]);
-  console.log(product);
   return (
     <Card
       type="selection"
