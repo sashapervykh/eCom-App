@@ -1,6 +1,10 @@
 import { supabase } from '../libs/supabase/client';
 
 class AuthService {
+  async updateSession() {
+    return supabase.auth.getSession();
+  }
+
   async signUp({ email, password, options }: { email: string; password: string; options: object }) {
     return supabase.auth.signUp({
       email,

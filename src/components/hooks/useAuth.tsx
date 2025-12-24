@@ -6,6 +6,7 @@ import { customerAPI } from '../../api/customer-api';
 // import { mergeCarts } from '../../utilities/return-basket-items';
 import { User } from '@supabase/supabase-js';
 import { UserData } from '../../libs/supabase/types';
+import { authService } from '../../services/auth.service';
 
 interface AuthContextType {
   userInfo: UserData | null;
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const refresh_token = localStorage.getItem('refresh_token');
         if (refresh_token) {
           try {
-            await refresh(refresh_token);
+            await refresh();
             return;
           } catch (refreshError) {
             console.error('Refresh token failed:', refreshError);
@@ -95,11 +96,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   //   }
   // };
 
-  const refresh = async (refresh_token: string) => {
+  const refresh = async (/*refresh_token: string*/) => {
     try {
-      customerAPI.createCustomerWithRefreshToken(refresh_token);
-      const customerData = await customerAPI.apiRoot().me().get().execute();
-      console.log(customerData.body);
+      const { data, error } = await authService.updateSession();
+      if (!data.session?.user) {
+        throw new Error('User data is not received');
+      }
+      if (error) {
+        throw error;
+      }
+      saveUserInfo(data.session.user);
     } catch (error) {
       console.error(error);
     } finally {
@@ -147,21 +153,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const refreshWithSavedToken = async () => {
-      const refresh_token = localStorage.getItem('refresh_token');
-      if (refresh_token) {
-        try {
-          await refresh(refresh_token);
-        } catch {
-          setUserInfo(null);
-          customerAPI.createAnonymCustomer();
-        }
-      } else {
-        customerAPI.createAnonymCustomer();
-      }
-      setIsLoading(false);
-    };
-    void refreshWithSavedToken();
+    void refresh();
   }, []);
 
   const authContextValue = {
