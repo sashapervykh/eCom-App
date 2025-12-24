@@ -1,7 +1,7 @@
-import { Customer } from '@commercetools/platform-sdk';
 import styles from './style.module.css';
+import { UserData } from '../../libs/supabase/types';
 
-export function ProfileView({ userInfo }: { userInfo: Customer }) {
+export function ProfileView({ userInfo }: { userInfo: UserData }) {
   return (
     <div className={styles['profile-section']}>
       <p>

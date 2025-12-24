@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NotFoundPage } from '../../../404/not-found';
 import { Pagination } from './pagination';
+import { categoryService } from '../../../../services/category.service';
 
 export function CatalogContent({
   categoryKey: propertyCategoryKey,
@@ -54,7 +55,7 @@ export function CatalogContent({
       setIsCategoryLoading(true);
       try {
         if (categoryKey) {
-          const data = await returnCategoryData(categoryKey);
+          const data = await categoryService.getByName(categoryKey);
           setCategoryData(data);
         } else {
           setCategoryData(null);
@@ -132,8 +133,8 @@ export function CatalogContent({
         />
         {displayData && (
           <>
-            <h1>{displayData.name || 'Catalogue'}</h1>
-            {displayData.description && (
+            <h1>{displayData.name.toUpperCase() || 'Catalogue'}</h1>
+            {displayData.description.toUpperCase() && (
               <Text variant="body-2" className={styles['category-description']}>
                 {displayData.description}
               </Text>

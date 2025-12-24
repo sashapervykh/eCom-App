@@ -72,7 +72,7 @@ export function ProductPage() {
 
   useEffect(() => {
     if (productId) {
-      getProductDetails(productId);
+      getProductDetails(Number(productId));
       void fetchCartItems();
     }
   }, [productId, getProductDetails, fetchCartItems]);
@@ -97,8 +97,8 @@ export function ProductPage() {
     );
   }
 
-  const hasImages = productDetails.images && productDetails.images.length > 0;
-  const hasMultipleImages = productDetails.images && productDetails.images.length > 1;
+  const hasImages = productDetails.images.length > 0;
+  const hasMultipleImages = productDetails.images.length > 1;
 
   return (
     <div className={styles['product-page']}>
@@ -123,11 +123,11 @@ export function ProductPage() {
                 loop={hasMultipleImages}
                 className={styles['swiper-container']}
               >
-                {productDetails.images?.map((image, index) => (
+                {productDetails.images.map((image, index) => (
                   <SwiperSlide key={index}>
                     <img
-                      src={image.url}
-                      alt={image.label ?? `${productDetails.name} image`}
+                      src={image}
+                      alt={`${productDetails.name} image`}
                       onClick={() => handleImageClick(index)}
                       style={{ cursor: 'pointer' }}
                       className={styles['product-image']}
@@ -153,24 +153,26 @@ export function ProductPage() {
           </div>
           <div className={styles['text-wrapper']}>
             <Text variant="subheader-1" className={styles.price}>
-              Price: ${productDetails.price}{' '}
-              {productDetails.fullPrice && <span className={styles['full-price']}>${productDetails.fullPrice}</span>}
+              Price: ${productDetails.formattedPrice}{' '}
+              {productDetails.formattedFullPrice && (
+                <span className={styles['full-price']}>${productDetails.formattedFullPrice}</span>
+              )}
             </Text>
             <Text variant="body-2" className={styles.description}>
               <b>Description:</b> {productDetails.description}
             </Text>
-            {productDetails.attributes && productDetails.attributes.length > 0 && (
+            {
               <Text variant="body-2" className={styles.attributes}>
                 <h2>Property Features</h2>
                 <ul>
-                  {productDetails.attributes.map((attribute, index) => (
+                  {Object.entries(productDetails.attributes).map((attribute, index) => (
                     <li key={index}>
-                      {attribute.name}: {formatAttributeValue(attribute.value)}
+                      <b>{attribute[0]}</b>: {formatAttributeValue(attribute[1])}
                     </li>
                   ))}
                 </ul>
               </Text>
-            )}
+            }
             <div className={styles['actions-wrapper']}>
               <AddToCartButton product={productDetails} />
             </div>
@@ -204,14 +206,10 @@ export function ProductPage() {
               initialSlide={initialSlide}
               className={`${modalStyles['modal-swiper-container']} modal-swiper`}
             >
-              {productDetails.images?.map((image, index) => (
+              {productDetails.images.map((image, index) => (
                 <SwiperSlide key={index} onClick={handleSlideClick}>
                   <div className="swiper-zoom-container" data-swiper-zoom>
-                    <img
-                      src={image.url}
-                      alt={image.label ?? `${productDetails.name} image`}
-                      className={modalStyles['modal-image']}
-                    />
+                    <img src={image} alt={`${productDetails.name} image`} className={modalStyles['modal-image']} />
                   </div>
                 </SwiperSlide>
               ))}

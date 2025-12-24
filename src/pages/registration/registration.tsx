@@ -7,15 +7,15 @@ import { useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { api } from '../../api/api';
 import { registrationSchema } from '../../utilities/validation-config/validation-rules';
 import { Navigate, useNavigate } from 'react-router';
 import { PageWrapper } from '../../components/page-wrapper/page-wrapper';
 import { NavigationButton } from '../../components/navigation-button/navigation-button';
 import { useAuth } from '../../components/hooks/useAuth';
+import { authService } from '../../services/auth.service';
 
 export function RegistrationPage() {
-  const { login, isAuthenticated } = useAuth();
+  const { /* login,*/ isAuthenticated, saveUserInfo } = useAuth();
   const [successMessage, setSuccessMessage] = useState<string | undefined>();
   const [serverError, setServerError] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,59 +118,64 @@ export function RegistrationPage() {
       setServerError(undefined);
       setSuccessMessage(undefined);
 
-      const shippingAddress = {
-        key: 'shipping',
-        streetName: data.shippingStreet,
-        city: data.shippingCity,
-        country: data.shippingCountry ?? '',
-        postalCode: data.shippingPostalCode,
-      };
+      // const shippingAddress = {
+      //   key: 'shipping',
+      //   streetName: data.shippingStreet,
+      //   city: data.shippingCity,
+      //   country: data.shippingCountry ?? '',
+      //   postalCode: data.shippingPostalCode,
+      // };
 
-      const requestBody = {
-        ...data,
-        dateOfBirth: data.dateOfBirth.split('T')[0],
-        addresses: data.sameAddress
-          ? [shippingAddress]
-          : [
-              shippingAddress,
-              {
-                key: 'billing',
-                streetName: data.billingStreet,
-                city: data.billingCity,
-                country: data.billingCountry ?? '',
-                postalCode: data.billingPostalCode,
-              },
-            ],
-        billingAddresses: data.sameAddress ? [0] : [1],
-        shippingAddresses: [0],
-        defaultShippingAddress: data.setAsDefaultShipping ? 0 : undefined,
-        defaultBillingAddress: data.setAsDefaultBilling ? (data.sameAddress ? 0 : 1) : undefined,
-      };
+      // const requestBody = {
+      //   ...data,
+      //   dateOfBirth: data.dateOfBirth.split('T')[0],
+      //   addresses: data.sameAddress
+      //     ? [shippingAddress]
+      //     : [
+      //         shippingAddress,
+      //         {
+      //           key: 'billing',
+      //           streetName: data.billingStreet,
+      //           city: data.billingCity,
+      //           country: data.billingCountry ?? '',
+      //           postalCode: data.billingPostalCode,
+      //         },
+      //       ],
+      //   billingAddresses: data.sameAddress ? [0] : [1],
+      //   shippingAddresses: [0],
+      //   defaultShippingAddress: data.setAsDefaultShipping ? 0 : undefined,
+      //   defaultBillingAddress: data.setAsDefaultBilling ? (data.sameAddress ? 0 : 1) : undefined,
+      // };
 
-      const response: unknown = await api.createCustomer(requestBody);
+      const { data: signUpData, error } = await authService.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          dateOfBirth: data.dateOfBirth,
+          billingStreet: data.billingStreet,
+          billingCity: data.billingCity,
+          billingCountry: data.billingCountry,
+          billingPostalCode: data.billingPostalCode,
+          shippingStreet: data.shippingStreet,
+          shippingCity: data.shippingCity,
+          shippingCountry: data.shippingCountry,
+          shippingPostalCode: data.shippingPostalCode,
+          sameAddress: data.sameAddress,
+          setAsDefaultShipping: data.setAsDefaultShipping,
+          setAsDefaultBilling: data.setAsDefaultBilling,
+        },
+      });
 
-      if (
-        response &&
-        typeof response === 'object' &&
-        'statusCode' in response &&
-        response.statusCode === 400 &&
-        'errors' in response &&
-        Array.isArray(response.errors)
-      ) {
-        if (response.errors.length > 0) {
-          const errorMessages = response.errors
-            .filter((error: { message?: string }) => error.message)
-            .map((error: { message: string }) => error.message)
-            .join(', ');
-          setServerError(
-            (errorMessages || (response as { message?: string }).message) ?? 'Error while registering. Try again.',
-          );
-        }
-        console.error('API error:', response);
-        return;
+      if (error) {
+        throw error;
+      }
+      if (!signUpData.user) {
+        throw new Error('Data about user is not received');
       }
 
-      login(data.email, data.password);
+      saveUserInfo(signUpData.user);
 
       setSuccessMessage('Account successfully created! You have successfully logged in.');
 
@@ -178,8 +183,12 @@ export function RegistrationPage() {
 
       void navigate(Routes.main);
     } catch (error) {
+      let message = 'A server error has occurred. Please try again later.';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       console.error('Error while registering:', error);
-      setServerError('A server error has occurred. Please try again later.');
+      setServerError(message);
     } finally {
       setIsSubmitting(false);
     }

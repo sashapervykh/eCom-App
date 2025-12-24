@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Button, useToaster } from '@gravity-ui/uikit';
 import { ShoppingCart } from '@gravity-ui/icons';
-import { ProductInfo } from '../../pages/catalog/components/catalog-content/product/types';
 import { useCartActions } from '../hooks/useCartActions';
 import { useCart } from '../hooks/useCart';
 import styles from './styles.module.css';
+import { Product } from '../../libs/supabase/types';
 
 interface AddToCartButtonProps {
-  product: ProductInfo;
+  product: Product;
   className?: string;
 }
 
 export function AddToCartButton({ product, className }: AddToCartButtonProps) {
-  const { isInCart, handleAddToCart, handleRemoveFromCart } = useCartActions(product.id);
+  const { isInCart, handleAddToCart, handleRemoveFromCart } = useCartActions(product.id.toString());
   const [isLoading, setIsLoading] = useState(false);
   const toaster = useToaster();
   const { updateProductsInCartAmount } = useCart();

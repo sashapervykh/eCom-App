@@ -1,11 +1,12 @@
-import { Address, Customer } from '@commercetools/platform-sdk';
+import { Address } from '@commercetools/platform-sdk';
 import { Button, Card, Checkbox, Text } from '@gravity-ui/uikit';
 import styles from './style.module.css';
 import { useState } from 'react';
 import { AddressForm } from './AddressForm';
+import { UserData } from '../../libs/supabase/types';
 
 interface AddressListProps {
-  customer: Customer;
+  customer: UserData;
   onAddressAdded: (address: Partial<Address>) => Promise<void>;
   onAddressUpdated: (addressId: string, address: Partial<Address>) => Promise<void>;
   onAddressRemoved: (addressId: string) => Promise<void>;
@@ -81,13 +82,13 @@ export function AddressList({
                 </div>
                 <div className={styles['address-defaults']}>
                   <Checkbox
-                    checked={customer.defaultShippingAddressId === address.id}
+                    checked={customer.setAsDefaultShipping}
                     onChange={() => address.id && onSetDefaultShipping(address.id)}
                   >
                     Default Shipping
                   </Checkbox>
                   <Checkbox
-                    checked={customer.defaultBillingAddressId === address.id}
+                    checked={customer.setAsDefaultBilling}
                     onChange={() => address.id && onSetDefaultBilling(address.id)}
                   >
                     Default Billing
