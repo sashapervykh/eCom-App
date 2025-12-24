@@ -1,4 +1,3 @@
-import { Customer } from '@commercetools/platform-sdk';
 import { Card, Button, useToaster } from '@gravity-ui/uikit';
 import { useState } from 'react';
 import styles from './style.module.css';
@@ -10,8 +9,9 @@ import { api } from '../../api/api';
 import { useAuth } from '../../components/hooks/useAuth';
 import type { Address } from '@commercetools/platform-sdk';
 import { customerAPI } from '../../api/customer-api';
+import { UserData } from '../../libs/supabase/types';
 
-export function UserContent({ userInfo }: { userInfo: Customer }) {
+export function UserContent({ userInfo }: { userInfo: UserData }) {
   const { refreshUser } = useAuth();
   const toaster = useToaster();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -76,9 +76,9 @@ export function UserContent({ userInfo }: { userInfo: Customer }) {
     }
   };
 
-  const handleAddressRemoved = async (addressId: string): Promise<void> => {
+  const handleAddressRemoved = async (/*addressId: string*/): Promise<void> => {
     try {
-      await api.removeAddress(userInfo.id, userInfo.version, addressId);
+      // await api.removeAddress(userInfo.id, userInfo.version, addressId);
       await refreshUser();
       toaster.add({
         name: 'address-removed',
@@ -97,9 +97,9 @@ export function UserContent({ userInfo }: { userInfo: Customer }) {
     }
   };
 
-  const handleSetDefaultShipping = async (addressId: string): Promise<void> => {
+  const handleSetDefaultShipping = async (/*addressId: string*/): Promise<void> => {
     try {
-      await api.setDefaultShippingAddress(userInfo.id, userInfo.version, addressId);
+      // await api.setDefaultShippingAddress(userInfo.id, userInfo.version, addressId);
       await refreshUser();
       toaster.add({
         name: 'default-shipping-set',
@@ -118,9 +118,9 @@ export function UserContent({ userInfo }: { userInfo: Customer }) {
     }
   };
 
-  const handleSetDefaultBilling = async (addressId: string): Promise<void> => {
+  const handleSetDefaultBilling = async (/* addressId: string */): Promise<void> => {
     try {
-      await api.setDefaultBillingAddress(userInfo.id, userInfo.version, addressId);
+      // await api.setDefaultBillingAddress(userInfo.id, userInfo.version, addressId);
       await refreshUser();
       toaster.add({
         name: 'default-billing-set',

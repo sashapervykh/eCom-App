@@ -2,27 +2,27 @@ import { useState } from 'react';
 import { useToaster } from '@gravity-ui/uikit';
 import { api } from '../../api/api';
 import { customerAPI } from '../../api/customer-api';
-import { isTokenResponse } from '../../utilities/return-checked-token-response';
 import { useAuth } from '../../components/hooks/useAuth';
+import { UserData } from '../../libs/supabase/types';
 
-export function usePasswordChange(userInfo: { id: string; version: number; email: string }) {
-  const { refreshUser, login } = useAuth();
+export function usePasswordChange(userInfo: UserData) {
+  const { refreshUser /* login */ } = useAuth();
   const toaster = useToaster();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePasswordChange = async (currentPassword: string, newPassword: string) => {
     setIsSubmitting(true);
     try {
-      const tokenResponse = await api.getAccessToken({
-        email: userInfo.email,
-        password: currentPassword,
-      });
+      // const tokenResponse = await api.getAccessToken({
+      //   email: userInfo.email,
+      //   password: currentPassword,
+      // });
 
-      if (!isTokenResponse(tokenResponse)) {
-        throw new Error('Invalid email or password');
-      }
+      // if (!isTokenResponse(tokenResponse)) {
+      //   throw new Error('Invalid email or password');
+      // }
 
-      customerAPI.createAuthenticatedCustomer(tokenResponse.token_type, tokenResponse.access_token);
+      // customerAPI.createAuthenticatedCustomer(tokenResponse.token_type, tokenResponse.access_token);
 
       const customerData = await customerAPI.apiRoot().me().get().execute();
       const currentVersion = customerData.body.version;
@@ -34,7 +34,7 @@ export function usePasswordChange(userInfo: { id: string; version: number; email
         newPassword,
       });
 
-      await login(userInfo.email, newPassword, true);
+      // await login(userInfo.email, newPassword, true);
       await refreshUser();
 
       toaster.add({

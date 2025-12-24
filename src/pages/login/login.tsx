@@ -11,11 +11,12 @@ import styles from './style.module.css';
 import { Routes } from '../../components/navigation-button/type';
 import { useAuth } from '../../components/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
+import { authService } from '../../services/auth.service';
 
 const loginSchema = schema.pick({ email: true, password: true });
 
 export function LoginPage() {
-  const { serverError, login, setServerError, isAuthenticated } = useAuth();
+  const { serverError, /*login,*/ setServerError, isAuthenticated, saveUserInfo } = useAuth();
   const {
     register,
     handleSubmit,
@@ -28,7 +29,12 @@ export function LoginPage() {
 
   const onSubmit = async (data: { email: string; password: string }) => {
     try {
-      await login(data.email, data.password);
+      const { data: apiData, error } = await authService.signIn({ email: data.email, password: data.password });
+      if (error) {
+        throw error;
+      }
+
+      saveUserInfo(apiData.user);
     } catch (error) {
       console.error('Login error:', error);
       setServerError('Login failed. Please try again.');

@@ -2,13 +2,13 @@ import { Button, TextInput } from '@gravity-ui/uikit';
 import { useForm } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import styles from './style.module.css';
-import { Customer } from '@commercetools/platform-sdk';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registrationSchema } from '../../utilities/validation-config/validation-rules';
 import { z } from 'zod';
 import { useProfileForm } from './useProfileForm';
+import { UserData } from '../../libs/supabase/types';
 
-export function ProfileEditForm({ userInfo, onCancel }: { userInfo: Customer; onCancel: () => void }) {
+export function ProfileEditForm({ userInfo, onCancel }: { userInfo: UserData; onCancel: () => void }) {
   const { handleSubmit: handleProfileSubmit, isSubmitting } = useProfileForm(userInfo);
   const {
     register,
@@ -25,10 +25,10 @@ export function ProfileEditForm({ userInfo, onCancel }: { userInfo: Customer; on
         lastName: true,
         dateOfBirth: true,
       }) as z.ZodType<{
-        email: string;
-        firstName: string;
-        lastName: string;
-        dateOfBirth: string;
+        email: string | undefined;
+        firstName: string | undefined;
+        lastName: string | undefined;
+        dateOfBirth: string | undefined;
       }>,
     ),
     defaultValues: {
@@ -40,7 +40,12 @@ export function ProfileEditForm({ userInfo, onCancel }: { userInfo: Customer; on
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    await handleProfileSubmit(data);
+    await handleProfileSubmit({
+      email: data.email ?? '',
+      firstName: data.firstName ?? '',
+      lastName: data.lastName ?? '',
+      dateOfBirth: data.dateOfBirth ?? '',
+    });
   });
 
   return (

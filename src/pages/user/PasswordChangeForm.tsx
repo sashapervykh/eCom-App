@@ -3,18 +3,13 @@ import { usePasswordValidation } from './password-validation';
 import { usePasswordChange } from './usePasswordChange';
 import styles from './style.module.css';
 import { forwardRef } from 'react';
+import { UserData } from '../../libs/supabase/types';
 
 const CustomPasswordInput = forwardRef<HTMLInputElement, React.ComponentProps<typeof PasswordInput>>(
   (props, reference) => <PasswordInput {...props} controlRef={reference} />,
 );
 
-export function PasswordChangeForm({
-  userInfo,
-  onCancel,
-}: {
-  userInfo: { id: string; version: number; email: string };
-  onCancel: () => void;
-}) {
+export function PasswordChangeForm({ userInfo, onCancel }: { userInfo: UserData; onCancel: () => void }) {
   const { handlePasswordChange, isSubmitting } = usePasswordChange(userInfo);
   const {
     register,

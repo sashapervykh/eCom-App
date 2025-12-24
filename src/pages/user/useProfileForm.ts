@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useToaster } from '@gravity-ui/uikit';
-import { Customer } from '@commercetools/platform-sdk';
 import { api } from '../../api/api';
 import { useAuth } from '../../components/hooks/useAuth';
 import { customerAPI } from '../../api/customer-api';
+import { UserData } from '../../libs/supabase/types';
 
-export function useProfileForm(userInfo: Customer) {
+export function useProfileForm(userInfo: UserData) {
   const { refreshUser } = useAuth();
   const toaster = useToaster();
   const [isSubmitting, setIsSubmitting] = useState(false);
