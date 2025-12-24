@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 // import { api } from '../../api/api';
 // import { isErrorResponse, isTokenResponse } from '../../utilities/return-checked-token-response';
-import { customerAPI } from '../../api/customer-api';
+// import { customerAPI } from '../../api/customer-api';
 // import { useNavigate } from 'react-router-dom';
 // import { mergeCarts } from '../../utilities/return-basket-items';
 import { User } from '@supabase/supabase-js';
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.error('Refresh token failed:', refreshError);
           }
         }
-        logout();
+        void logout();
       }
       console.error('Failed to refresh user data:', error);
     }
@@ -144,11 +144,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUserInfo(userData);
   };
 
-  const logout = () => {
-    customerAPI.createAnonymCustomer();
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('anonymous_user_id');
-    localStorage.removeItem('anonymous_cart_id');
+  const logout = async () => {
+    await authService.logout();
+    // localStorage.removeItem('refresh_token');
+    // localStorage.removeItem('anonymous_user_id');
+    // localStorage.removeItem('anonymous_cart_id');
     setUserInfo(null);
   };
 

@@ -19,6 +19,10 @@ class AuthService {
       password,
     });
   }
+
+  async logout() {
+    return supabase.auth.signOut();
+  }
 }
 
 export const authService = new AuthService();
