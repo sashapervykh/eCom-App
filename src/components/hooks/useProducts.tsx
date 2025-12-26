@@ -33,7 +33,7 @@ interface ProductsContextType {
   isFiltersOpen: boolean;
   setIsFiltersOpen: React.Dispatch<React.SetStateAction<boolean>>;
   criteriaData: CriteriaData;
-  isProductInCart: (productId: string) => boolean;
+  isProductInCart: (productId: number) => boolean;
   getBasketItems: () => Promise<BasketItem[]>;
   cartItems: BasketItem[];
   fetchCartItems: () => Promise<void>;
@@ -123,6 +123,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
     setIsCartLoading(true);
     try {
       const items = await getBasketItems();
+      console.log(items);
       setCartItems(items);
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -278,7 +279,7 @@ export const ProductsProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, []);
 
-  const isProductInCart = (productId: string) => {
+  const isProductInCart = (productId: number) => {
     return cartItems.some((item) => item.productId === productId);
   };
 
