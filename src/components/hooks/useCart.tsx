@@ -78,8 +78,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const cart = await cartService.getOrCreateCart();
       if (!cart) throw new Error('Cart data is not received');
-
-      setCartPageData({ id: cart.id, cartProducts: cart.items });
+      const totalCartPrice = cart.items.reduce(
+        (accumulator, current) => accumulator + current.quantity * current.price_at_add,
+        0,
+      );
+      setCartPageData({ id: cart.id, totalCartPrice, cartProducts: cart.items });
 
       setIsCartPageLoading(false);
     } catch (error) {
