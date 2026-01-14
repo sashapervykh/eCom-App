@@ -179,69 +179,67 @@ export async function addToCart(productId: number, quantity = 1): Promise<void> 
   }
 }
 
-export async function removeFromCart(productId: number, quantity?: number): Promise<void> {
+export async function removeFromCart(productId: number): Promise<void> {
   try {
-    let cart;
-    if (customerAPI.isAnonymous) {
-      const cartId = localStorage.getItem(CART_ID_KEY);
-      const anonymousId = getOrCreateAnonymId();
-
-      if (!cartId) {
-        throw new Error('No cart found for anonymous user');
-      }
-      const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
-      cart = response.body;
-      if (cart.anonymousId !== anonymousId) {
-        throw new Error('Cart does not match anonymousId');
-      }
-    } else {
-      const response = await customerAPI.apiRoot().me().carts().get().execute();
-      cart = response.body.results[0];
-    }
-
-    const lineItem = cart.lineItems.find((item: LineItem) => Number(item.productId) === productId);
-    if (!lineItem) {
-      throw new Error('Product not found in cart');
-    }
-
-    if (customerAPI.isAnonymous) {
-      await customerAPI
-        .apiRoot()
-        .carts()
-        .withId({ ID: cart.id })
-        .post({
-          body: {
-            version: cart.version,
-            actions: [
-              {
-                action: 'removeLineItem',
-                lineItemId: lineItem.id,
-                quantity: quantity,
-              },
-            ],
-          },
-        })
-        .execute();
-    } else {
-      await customerAPI
-        .apiRoot()
-        .me()
-        .carts()
-        .withId({ ID: cart.id })
-        .post({
-          body: {
-            version: cart.version,
-            actions: [
-              {
-                action: 'removeLineItem',
-                lineItemId: lineItem.id,
-                quantity: quantity,
-              },
-            ],
-          },
-        })
-        .execute();
-    }
+    await cartService.removeFromCart(productId);
+    // let cart;
+    // if (customerAPI.isAnonymous) {
+    //   const cartId = localStorage.getItem(CART_ID_KEY);
+    //   const anonymousId = getOrCreateAnonymId();
+    //   if (!cartId) {
+    //     throw new Error('No cart found for anonymous user');
+    //   }
+    //   const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
+    //   cart = response.body;
+    //   if (cart.anonymousId !== anonymousId) {
+    //     throw new Error('Cart does not match anonymousId');
+    //   }
+    // } else {
+    //   const response = await customerAPI.apiRoot().me().carts().get().execute();
+    //   cart = response.body.results[0];
+    // }
+    // const lineItem = cart.lineItems.find((item: LineItem) => Number(item.productId) === productId);
+    // if (!lineItem) {
+    //   throw new Error('Product not found in cart');
+    // }
+    // if (customerAPI.isAnonymous) {
+    //   await customerAPI
+    //     .apiRoot()
+    //     .carts()
+    //     .withId({ ID: cart.id })
+    //     .post({
+    //       body: {
+    //         version: cart.version,
+    //         actions: [
+    //           {
+    //             action: 'removeLineItem',
+    //             lineItemId: lineItem.id,
+    //             quantity: quantity,
+    //           },
+    //         ],
+    //       },
+    //     })
+    //     .execute();
+    // } else {
+    //   await customerAPI
+    //     .apiRoot()
+    //     .me()
+    //     .carts()
+    //     .withId({ ID: cart.id })
+    //     .post({
+    //       body: {
+    //         version: cart.version,
+    //         actions: [
+    //           {
+    //             action: 'removeLineItem',
+    //             lineItemId: lineItem.id,
+    //             quantity: quantity,
+    //           },
+    //         ],
+    //       },
+    //     })
+    //     .execute();
+    // }
   } catch (error) {
     console.error('Error removing item from cart:', error);
     throw error;

@@ -169,8 +169,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     await updateProductsInCartAmount();
   };
 
-  const removeProductFromCart = async (productId: number, quantity?: number) => {
-    await removeFromCart(productId, quantity);
+  const removeProductFromCart = async (productId: number) => {
+    await removeFromCart(productId);
     await updateProductsInCartAmount();
   };
 
