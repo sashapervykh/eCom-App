@@ -183,6 +183,12 @@ class CartService {
 
     return !error;
   }
+
+  async updateProductQuantity(productId: string, quantity: number) {
+    const { error } = await supabase.from('cart_items').update({ quantity: quantity }).eq('id', productId);
+
+    return !error;
+  }
 }
 
 export const cartService = new CartService();

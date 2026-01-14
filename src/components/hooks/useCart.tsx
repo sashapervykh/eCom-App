@@ -59,6 +59,7 @@ interface CartContextType {
   addPromoCode: (cartId: string, version: number, key: string) => Promise<string | undefined>;
   removePromoCode: (cartId: string, version: number, codeId: string) => Promise<void>;
   isDiscountInProcess: boolean;
+  updateProductQuantity: (productId: string, quantity: number) => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType>({} as CartContextType);
@@ -85,6 +86,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('Error fetching cart data:', error);
       setIsCartPageLoading(false);
     }
+  };
+
+  const updateProductQuantity = async (productId: string, quantity: number) => {
+    await cartService.updateProductQuantity(productId, quantity);
   };
 
   const updateProductsInCartAmount = async () => {
@@ -162,6 +167,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     addPromoCode,
     removePromoCode,
     isDiscountInProcess,
+    updateProductQuantity,
   };
 
   return <CartContext.Provider value={CartContextValue}>{children}</CartContext.Provider>;
