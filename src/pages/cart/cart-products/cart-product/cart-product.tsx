@@ -21,8 +21,7 @@ export function CartProduct({ product }: { product: CartItem }) {
       previous[product.id] = true;
       return previous;
     });
-
-    await removeFromCart(Number(product.id));
+    await removeFromCart(product.product_id);
     await getCartPageData();
   };
 
