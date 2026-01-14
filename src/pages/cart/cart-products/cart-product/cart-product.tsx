@@ -9,11 +9,14 @@ import { formatPrice } from '../../../../utilities/format-price';
 import { CartItem } from '../../../../services/cart.service';
 
 export function CartProduct({ product }: { product: CartItem }) {
-  const { productsWithChangedAmount, removeFromCart, setRemovingProducts, cartPageData } = useCart();
+  const { productsWithChangedAmount, removeFromCart, setRemovingProducts } = useCart();
   const { getCartPageData } = useCart();
-
   const { removingProducts } = useCart();
   const [isRemoving, setIsRemoving] = useState<boolean | undefined>(removingProducts[product.id]);
+  const totalCurrentProductPrice = product.quantity * product.price_at_add;
+  let totalFullProductPrice;
+
+  if (product.product?.fullPrice) totalFullProductPrice = product.quantity * product.product.fullPrice;
 
   const handleRemoveClick = async () => {
     setIsRemoving(true);
@@ -38,9 +41,9 @@ export function CartProduct({ product }: { product: CartItem }) {
           </div>
           <Text className={styles.line} variant="body-2">
             <b>Unit price:</b>{' '}
-            {cartPageData?.isDiscountApplied && product.product?.fullPrice ? (
+            {product.product?.fullPrice ? (
               <div>
-                <div className={styles['discounted-price']}>${product.product.price}</div>{' '}
+                <div className={styles['discounted-price']}>${formatPrice(product.product.price)}</div>{' '}
                 <div className={styles['full-price']}>${formatPrice(product.product.fullPrice)}</div>{' '}
               </div>
             ) : (
@@ -59,17 +62,17 @@ export function CartProduct({ product }: { product: CartItem }) {
                 <Skeleton className={styles.total} />
               ) : (
                 <>
-                  {cartPageData?.isDiscountApplied && product.product?.fullPrice ? (
+                  {product.product?.fullPrice ? (
                     <div className={styles['total-prices']}>
                       <Text variant="body-2" className={styles['discounted-price']}>
-                        ${product.totalPrice}
+                        ${formatPrice(totalCurrentProductPrice)}
                       </Text>{' '}
                       <Text variant="body-2" className={styles['full-price']}>
-                        ${formatPrice(product.fullProductPrice)}
+                        ${formatPrice(totalFullProductPrice)}
                       </Text>{' '}
                     </div>
                   ) : (
-                    <div>${product.totalPrice}</div>
+                    <div>${formatPrice(totalCurrentProductPrice)}</div>
                   )}
                 </>
               )}

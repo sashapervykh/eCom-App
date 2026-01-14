@@ -82,7 +82,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         (accumulator, current) => accumulator + current.quantity * current.price_at_add,
         0,
       );
-      setCartPageData({ id: cart.id, totalCartPrice, cartProducts: cart.items });
+      setCartPageData({
+        id: cart.id,
+        totalCartPrice,
+        cartProducts: cart.items.sort((a, b) => a.product_id - b.product_id),
+      });
 
       setIsCartPageLoading(false);
     } catch (error) {

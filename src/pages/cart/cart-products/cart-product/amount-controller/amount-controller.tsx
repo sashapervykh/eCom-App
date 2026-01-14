@@ -21,7 +21,6 @@ export function AmountController({ product }: { product: CartItem }) {
     getCartPageData,
   } = useCart();
 
-  const [previousAmount, setPreviousAmount] = useState<number>(product.quantity);
   const [isRemoving, setIsRemoving] = useState<boolean | undefined>(removingProducts[product.id]);
 
   const handelAmountChange = () => {
@@ -57,14 +56,9 @@ export function AmountController({ product }: { product: CartItem }) {
       await getCartPageData();
       return;
     }
-    const difference = currentAmount - previousAmount;
-    if (difference > 0) {
-      await updateProductQuantity(product.id, difference);
-      setPreviousAmount(currentAmount);
-    } else if (difference < 0) {
-      await removeFromCart(product.product_id);
-      setPreviousAmount(currentAmount);
-    }
+
+    await updateProductQuantity(product.id, currentAmount);
+
     await getCartPageData();
   };
 
