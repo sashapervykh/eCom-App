@@ -31,7 +31,7 @@ export function ClearButton() {
                 view="action"
                 onClick={async () => {
                   setIsModalOpen(false);
-                  await clearCart(cartPageData.id, 0);
+                  await clearCart();
                 }}
               >
                 Clear

@@ -325,15 +325,9 @@ export async function mergeCarts(): Promise<void> {
   }
 }
 
-export async function deleteCart(cartId: string, version: number) {
+export async function deleteCart() {
   try {
-    localStorage.removeItem(CART_ID_KEY);
-    await customerAPI
-      .apiRoot()
-      .carts()
-      .withId({ ID: cartId })
-      .delete({ queryArgs: { version: version } })
-      .execute();
+    await cartService.clear();
   } catch (error) {
     console.error('Error while deleting the cart:', error);
   }

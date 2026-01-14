@@ -154,6 +154,21 @@ class CartService {
     return user ? user.id : null;
   }
 
+  async clear() {
+    const { data: cartData, error: cartError } = await supabase
+      .from('carts')
+      .select('id')
+      .eq('session_id', this.sessionId)
+      .single();
+
+    if (cartError || typeof cartData.id !== 'string') {
+      return false;
+    }
+    const { error } = await supabase.from('cart_items').delete().eq('cart_id', cartData.id);
+
+    return !error;
+  }
+
   async removeFromCart(itemId: number): Promise<boolean> {
     const { data: cartData, error: cartError } = await supabase
       .from('carts')
