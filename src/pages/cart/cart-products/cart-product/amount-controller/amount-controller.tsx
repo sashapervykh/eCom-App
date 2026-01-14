@@ -53,7 +53,7 @@ export function AmountController({ product }: { product: CartItem }) {
   const onSubmit = async () => {
     const currentAmount = getValues('amount');
     if (currentAmount === 0) {
-      await removeFromCart(Number(product.id));
+      await removeFromCart(product.product_id);
       await getCartPageData();
       return;
     }
@@ -62,7 +62,7 @@ export function AmountController({ product }: { product: CartItem }) {
       await addToCart(Number(product.id), difference);
       setPreviousAmount(currentAmount);
     } else if (difference < 0) {
-      await removeFromCart(Number(product.id), Math.abs(difference));
+      // await removeFromCart(Number(product.id), Math.abs(difference));
       setPreviousAmount(currentAmount);
     }
     await getCartPageData();

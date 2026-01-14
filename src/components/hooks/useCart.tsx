@@ -43,7 +43,7 @@ interface CartContextType {
   productsInCartAmount: number | undefined;
   updateProductsInCartAmount: () => void;
   addToCart: (productId: number, quantity?: number) => Promise<void>;
-  removeFromCart: (productId: number, quantity?: number) => Promise<void>;
+  removeFromCart: (productId: number) => Promise<void>;
   isProductInCart: (productId: number) => Promise<boolean>;
   getBasketItems: () => Promise<BasketItem[]>;
   removingProducts: RemovingType;
