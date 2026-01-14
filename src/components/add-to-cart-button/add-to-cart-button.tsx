@@ -12,7 +12,7 @@ interface AddToCartButtonProps {
 }
 
 export function AddToCartButton({ product, className }: AddToCartButtonProps) {
-  const { isInCart, handleAddToCart, handleRemoveFromCart } = useCartActions(product.id.toString());
+  const { isInCart, handleAddToCart, handleRemoveFromCart } = useCartActions(product.id);
   const [isLoading, setIsLoading] = useState(false);
   const toaster = useToaster();
   const { updateProductsInCartAmount } = useCart();

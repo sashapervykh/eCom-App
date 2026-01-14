@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useProducts } from './useProducts';
 import { useCart } from '../hooks/useCart';
 
-export function useCartActions(productId: string) {
+export function useCartActions(productId: number) {
   const { isProductInCart, cartItems } = useProducts();
   const { addToCart, removeFromCart } = useCart();
 

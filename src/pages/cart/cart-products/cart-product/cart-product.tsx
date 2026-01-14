@@ -1,13 +1,14 @@
 import { Button, Card, Skeleton, Text } from '@gravity-ui/uikit';
 import styles from './styles.module.css';
 import { AmountController } from './amount-controller/amount-controller';
-import { CartProductType, useCart } from '../../../../components/hooks/useCart';
+import { useCart } from '../../../../components/hooks/useCart';
 import { TrashBin } from '@gravity-ui/icons';
 import { useState } from 'react';
 import { RemovedProduct } from '../../../../components/removing-message/removing-message';
 import { formatPrice } from '../../../../utilities/format-price';
+import { CartItem } from '../../../../services/cart.service';
 
-export function CartProduct({ product }: { product: CartProductType }) {
+export function CartProduct({ product }: { product: CartItem }) {
   const { productsWithChangedAmount, removeFromCart, setRemovingProducts, cartPageData } = useCart();
   const { getCartPageData } = useCart();
 
@@ -21,30 +22,30 @@ export function CartProduct({ product }: { product: CartProductType }) {
       return previous;
     });
 
-    await removeFromCart(product.id);
+    await removeFromCart(Number(product.id));
     await getCartPageData();
   };
 
   return (
     <Card key={product.id} className={styles['product-wrapper']}>
       {isRemoving && <RemovedProduct />}
-      <img className={styles.image} src={product.images?.[0].url ?? ''}></img>
+      <img className={styles.image} src={product.product?.images[0] ?? ''}></img>
       <div className={styles['part-wrapper']}>
         <div className={styles['product-part']}>
           <div className={`${styles.name} ${styles.line}`}>
             <Text className={`${styles.name} ${styles.line}`} variant="body-2">
-              {product.name}
+              {product.product?.name}
             </Text>
           </div>
           <Text className={styles.line} variant="body-2">
             <b>Unit price:</b>{' '}
-            {cartPageData?.isDiscountApplied && product.fullPrice ? (
+            {cartPageData?.isDiscountApplied && product.product?.fullPrice ? (
               <div>
-                <div className={styles['discounted-price']}>${product.price}</div>{' '}
-                <div className={styles['full-price']}>${formatPrice(product.fullPrice)}</div>{' '}
+                <div className={styles['discounted-price']}>${product.product.price}</div>{' '}
+                <div className={styles['full-price']}>${formatPrice(product.product.fullPrice)}</div>{' '}
               </div>
             ) : (
-              <div>${product.price}</div>
+              <div>${product.product?.price}</div>
             )}
           </Text>
         </div>
@@ -59,7 +60,7 @@ export function CartProduct({ product }: { product: CartProductType }) {
                 <Skeleton className={styles.total} />
               ) : (
                 <>
-                  {cartPageData?.isDiscountApplied && product.fullPrice ? (
+                  {cartPageData?.isDiscountApplied && product.product?.fullPrice ? (
                     <div className={styles['total-prices']}>
                       <Text variant="body-2" className={styles['discounted-price']}>
                         ${product.totalPrice}

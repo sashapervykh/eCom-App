@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button, Spin, Text } from '@gravity-ui/uikit';
-import { CartProductType, useCart } from '../../../components/hooks/useCart';
+import { useCart } from '../../../components/hooks/useCart';
 import styles from './styles.module.css';
 import { CartProduct } from './cart-product/cart-product';
 import { useNavigate } from 'react-router-dom';
 import { TotalValue } from '../total-value/total-value';
+import { CartItem } from '../../../services/cart.service';
 export function CartProducts() {
   const navigate = useNavigate();
   const {
@@ -17,7 +18,7 @@ export function CartProducts() {
     getCartPageData,
     isCartDeleting,
   } = useCart();
-  const [cartProductsData, setCartProductsData] = useState<CartProductType[] | undefined>();
+  const [cartProductsData, setCartProductsData] = useState<CartItem[] | undefined>();
   const [totalPrice, setTotalPrice] = useState<number | undefined>(undefined);
   const isChangeInTheBasket =
     Object.values(removingProducts).some(Boolean) || Object.values(productsWithChangedAmount).some(Boolean);

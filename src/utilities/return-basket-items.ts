@@ -1,8 +1,10 @@
 import { Cart, LineItem, MyCartAddLineItemAction } from '@commercetools/platform-sdk';
 import { customerAPI } from '../api/customer-api';
 import { getOrCreateAnonymId } from '../utilities/return-anonim-id';
+import { CartItem, cartService } from '../services/cart.service';
 export interface BasketItem {
-  productId: string;
+  cartItemId: string;
+  productId: number;
   quantity: number;
 }
 
@@ -83,77 +85,83 @@ export async function getFullCartInfo(): Promise<Cart | undefined> {
 
 export async function getBasketItems(): Promise<BasketItem[]> {
   try {
-    let cart;
-    if (customerAPI.isAnonymous) {
-      const cartId = localStorage.getItem(CART_ID_KEY);
-      const anonymousId = getOrCreateAnonymId();
-
-      if (cartId) {
-        try {
-          const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
-          cart = response.body;
-          if (cart.anonymousId !== anonymousId) {
-            throw new Error('Cart does not match anonymousId');
-          }
-        } catch (error) {
-          console.error('Invalid cart ID, creating new cart:', error);
-          localStorage.removeItem(CART_ID_KEY);
-        }
-      }
-
-      if (!cart) {
-        const response = await customerAPI
-          .apiRoot()
-          .carts()
-          .get({
-            queryArgs: {
-              where: `anonymousId="${anonymousId}"`,
-            },
-          })
-          .execute();
-        cart = response.body.results[0];
-
-        if (response.body.results.length == 0) {
-          const createCartResponse = await customerAPI
-            .apiRoot()
-            .carts()
-            .post({
-              body: {
-                currency: 'USD',
-                anonymousId: anonymousId,
-              },
-            })
-            .execute();
-          cart = createCartResponse.body;
-          localStorage.setItem(CART_ID_KEY, cart.id);
-        }
-      }
-    } else {
-      const response = await customerAPI.apiRoot().me().carts().get().execute();
-
-      cart = response.body.results[0];
-
-      if (response.body.results.length == 0) {
-        const createCartResponse = await customerAPI
-          .apiRoot()
-          .me()
-          .carts()
-          .post({
-            body: {
-              currency: 'USD',
-            },
-          })
-          .execute();
-        cart = createCartResponse.body;
-      }
-    }
-
-    if (cart.lineItems.length == 0) {
+    const cart = await cartService.getOrCreateCart();
+    if (!cart) {
+      console.error('Error fetching basket items: Cart data is not received');
       return [];
     }
+    // let cart;
+    // if (customerAPI.isAnonymous) {
+    //   const cartId = localStorage.getItem(CART_ID_KEY);
+    //   const anonymousId = getOrCreateAnonymId();
 
-    return cart.lineItems.map((item: LineItem) => ({
-      productId: item.productId,
+    //   if (cartId) {
+    //     try {
+    //       const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
+    //       cart = response.body;
+    //       if (cart.anonymousId !== anonymousId) {
+    //         throw new Error('Cart does not match anonymousId');
+    //       }
+    //     } catch (error) {
+    //       console.error('Invalid cart ID, creating new cart:', error);
+    //       localStorage.removeItem(CART_ID_KEY);
+    //     }
+    //   }
+
+    //   if (!cart) {
+    //     const response = await customerAPI
+    //       .apiRoot()
+    //       .carts()
+    //       .get({
+    //         queryArgs: {
+    //           where: `anonymousId="${anonymousId}"`,
+    //         },
+    //       })
+    //       .execute();
+    //     cart = response.body.results[0];
+
+    //     if (response.body.results.length == 0) {
+    //       const createCartResponse = await customerAPI
+    //         .apiRoot()
+    //         .carts()
+    //         .post({
+    //           body: {
+    //             currency: 'USD',
+    //             anonymousId: anonymousId,
+    //           },
+    //         })
+    //         .execute();
+    //       cart = createCartResponse.body;
+    //       localStorage.setItem(CART_ID_KEY, cart.id);
+    //     }
+    //   }
+    // } else {
+    //   const response = await customerAPI.apiRoot().me().carts().get().execute();
+
+    //   cart = response.body.results[0];
+
+    //   if (response.body.results.length == 0) {
+    //     const createCartResponse = await customerAPI
+    //       .apiRoot()
+    //       .me()
+    //       .carts()
+    //       .post({
+    //         body: {
+    //           currency: 'USD',
+    //         },
+    //       })
+    //       .execute();
+    //     cart = createCartResponse.body;
+    //   }
+    // }
+
+    // if (cart.lineItems.length == 0) {
+    //   return [];
+    // }
+
+    return cart.items.map((item: CartItem) => ({
+      cartItemId: item.id,
+      productId: item.product_id,
       quantity: item.quantity,
     }));
   } catch (error) {
@@ -162,101 +170,102 @@ export async function getBasketItems(): Promise<BasketItem[]> {
   }
 }
 
-export async function addToCart(productId: string, quantity = 1): Promise<void> {
+export async function addToCart(productId: number, quantity = 1): Promise<void> {
   try {
-    let cart;
-    if (customerAPI.isAnonymous) {
-      const cartId = localStorage.getItem(CART_ID_KEY);
-      const anonymousId = getOrCreateAnonymId();
+    await cartService.addToCart(productId, quantity);
+    // let cart;
+    // if (customerAPI.isAnonymous) {
+    //   const cartId = localStorage.getItem(CART_ID_KEY);
+    //   const anonymousId = getOrCreateAnonymId();
 
-      if (cartId) {
-        try {
-          const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
-          cart = response.body;
-          if (cart.anonymousId !== anonymousId) {
-            throw new Error('Cart does not match anonymous Id');
-          }
-        } catch (error) {
-          console.error('Invalid cart ID, creating new cart:', error);
-          localStorage.removeItem(CART_ID_KEY);
-        }
-      }
+    //   if (cartId) {
+    //     try {
+    //       const response = await customerAPI.apiRoot().carts().withId({ ID: cartId }).get().execute();
+    //       cart = response.body;
+    //       if (cart.anonymousId !== anonymousId) {
+    //         throw new Error('Cart does not match anonymous Id');
+    //       }
+    //     } catch (error) {
+    //       console.error('Invalid cart ID, creating new cart:', error);
+    //       localStorage.removeItem(CART_ID_KEY);
+    //     }
+    //   }
 
-      if (!cart) {
-        const createCartResponse = await customerAPI
-          .apiRoot()
-          .carts()
-          .post({
-            body: {
-              currency: 'USD',
-              anonymousId: anonymousId,
-            },
-          })
-          .execute();
-        cart = createCartResponse.body;
-        localStorage.setItem(CART_ID_KEY, cart.id);
-      }
+    //   if (!cart) {
+    //     const createCartResponse = await customerAPI
+    //       .apiRoot()
+    //       .carts()
+    //       .post({
+    //         body: {
+    //           currency: 'USD',
+    //           anonymousId: anonymousId,
+    //         },
+    //       })
+    //       .execute();
+    //     cart = createCartResponse.body;
+    //     localStorage.setItem(CART_ID_KEY, cart.id);
+    //   }
 
-      await customerAPI
-        .apiRoot()
-        .carts()
-        .withId({ ID: cart.id })
-        .post({
-          body: {
-            version: cart.version,
-            actions: [
-              {
-                action: 'addLineItem',
-                productId,
-                quantity,
-              },
-            ],
-          },
-        })
-        .execute();
-    } else {
-      const response = await customerAPI.apiRoot().me().carts().get().execute();
-      cart = response.body.results[0];
-      if (response.body.results.length == 0) {
-        const createCartResponse = await customerAPI
-          .apiRoot()
-          .me()
-          .carts()
-          .post({
-            body: {
-              currency: 'USD',
-            },
-          })
-          .execute();
-        cart = createCartResponse.body;
-      }
+    //   await customerAPI
+    //     .apiRoot()
+    //     .carts()
+    //     .withId({ ID: cart.id })
+    //     .post({
+    //       body: {
+    //         version: cart.version,
+    //         actions: [
+    //           {
+    //             action: 'addLineItem',
+    //             productId,
+    //             quantity,
+    //           },
+    //         ],
+    //       },
+    //     })
+    //     .execute();
+    // } else {
+    //   const response = await customerAPI.apiRoot().me().carts().get().execute();
+    //   cart = response.body.results[0];
+    //   if (response.body.results.length == 0) {
+    //     const createCartResponse = await customerAPI
+    //       .apiRoot()
+    //       .me()
+    //       .carts()
+    //       .post({
+    //         body: {
+    //           currency: 'USD',
+    //         },
+    //       })
+    //       .execute();
+    //     cart = createCartResponse.body;
+    //   }
 
-      await customerAPI
-        .apiRoot()
-        .me()
-        .carts()
-        .withId({ ID: cart.id })
-        .post({
-          body: {
-            version: cart.version,
-            actions: [
-              {
-                action: 'addLineItem',
-                productId,
-                quantity,
-              },
-            ],
-          },
-        })
-        .execute();
-    }
+    //   await customerAPI
+    //     .apiRoot()
+    //     .me()
+    //     .carts()
+    //     .withId({ ID: cart.id })
+    //     .post({
+    //       body: {
+    //         version: cart.version,
+    //         actions: [
+    //           {
+    //             action: 'addLineItem',
+    //             productId,
+    //             quantity,
+    //           },
+    //         ],
+    //       },
+    //     })
+    //     .execute();
+    // }
   } catch (error) {
     console.error('Error adding item to cart:', error);
     throw error;
   }
 }
 
-export async function removeFromCart(productId: string, quantity?: number): Promise<void> {
+export async function removeFromCart(productId: number, quantity?: number): Promise<void> {
   try {
     let cart;
     if (customerAPI.isAnonymous) {
@@ -276,7 +285,7 @@ export async function removeFromCart(productId: string, quantity?: number): Prom
       cart = response.body.results[0];
     }
 
-    const lineItem = cart.lineItems.find((item: LineItem) => item.productId === productId);
+    const lineItem = cart.lineItems.find((item: LineItem) => Number(item.productId) === productId);
     if (!lineItem) {
       throw new Error('Product not found in cart');
     }
@@ -325,7 +334,7 @@ export async function removeFromCart(productId: string, quantity?: number): Prom
   }
 }
 
-export async function isProductInCart(productId: string): Promise<boolean> {
+export async function isProductInCart(productId: number): Promise<boolean> {
   const basketItems = await getBasketItems();
   return basketItems.some((item) => item.productId === productId);
 }

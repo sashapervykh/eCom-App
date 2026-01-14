@@ -29,7 +29,7 @@ export function DiscountController() {
                 setError('Error when removing promo');
                 return;
               }
-              await removePromoCode(cartPageData.id, cartPageData.version, cartPageData.codeId);
+              await removePromoCode(cartPageData.id, 0, cartPageData.codeId);
             }}
           />
         </div>
@@ -39,7 +39,7 @@ export function DiscountController() {
           onSubmit={async (event) => {
             event.preventDefault();
             const promo = getValues('promo').toLocaleUpperCase();
-            const result = await addPromoCode(cartPageData.id, cartPageData.version, promo);
+            const result = await addPromoCode(cartPageData.id, 0, promo);
             if (typeof result === 'string') {
               setError(result);
             }
