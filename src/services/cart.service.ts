@@ -37,8 +37,8 @@ class CartService {
 
   async getOrCreateCart(): Promise<Cart | null> {
     try {
-      const userId = (await this.getUserId()) ?? 'anonymus';
-      const { data: cart, error } = await supabase
+      const userId = await this.getUserId();
+      let query = supabase
         .from('carts')
         .select(
           `
@@ -49,9 +49,15 @@ class CartService {
           )
         `,
         )
-        .or(`session_id.eq.${this.sessionId},user_id.eq.${userId}`)
-        .eq('status', 'active')
-        .single<Cart>();
+        .eq('status', 'active');
+
+      if (userId) {
+        query = query.eq('user_id', userId);
+      } else {
+        query = query.eq('session_id', this.sessionId);
+      }
+
+      const { data: cart, error } = await query.single<Cart>();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching cart:', error);
