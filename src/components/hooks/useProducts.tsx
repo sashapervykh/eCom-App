@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { INITIAL_CRITERIA } from '../../constants/constants';
 import { getBasketItems, BasketItem } from '../../utilities/return-basket-items';
-import { Image } from '@commercetools/platform-sdk';
 import { formatPrice } from '../../utilities/format-price';
 import { productService } from '../../services/product.service';
 import { Product, ProductToDisplay } from '../../libs/supabase/types';
@@ -46,16 +45,6 @@ interface ProductsContextType {
 interface ApiError {
   statusCode: number;
   message: string;
-}
-
-export interface CartItemType {
-  id: string;
-  name: string;
-  price: string;
-  totalPrice: string;
-  fullPrice?: string;
-  images?: Image[];
-  quantity: number;
 }
 
 // function createFiltersQuery(filters: {

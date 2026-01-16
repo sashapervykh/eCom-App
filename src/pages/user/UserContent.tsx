@@ -5,10 +5,7 @@ import { ProfileView } from './ProfileView';
 import { ProfileEditForm } from './ProfileEditForm';
 import { PasswordChangeForm } from './PasswordChangeForm';
 import { AddressList } from './AddressList';
-import { api } from '../../api/api';
 import { useAuth } from '../../components/hooks/useAuth';
-import type { Address } from '@commercetools/platform-sdk';
-import { customerAPI } from '../../api/customer-api';
 import { UserData } from '../../libs/supabase/types';
 
 export function UserContent({ userInfo }: { userInfo: UserData }) {
@@ -17,18 +14,18 @@ export function UserContent({ userInfo }: { userInfo: UserData }) {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  const handleAddressAdded = async (address: Partial<Address>): Promise<void> => {
+  const handleAddressAdded = async (/*address: Partial<Address>*/): Promise<void> => {
     try {
-      const customerData = await customerAPI.apiRoot().me().get().execute();
-      const currentVersion = customerData.body.version;
+      // const customerData = await customerAPI.apiRoot().me().get().execute();
+      // const currentVersion = customerData.body.version;
 
-      await api.addAddress(userInfo.id, currentVersion, {
-        key: `address-${Date.now().toString()}`,
-        streetName: address.streetName ?? '',
-        city: address.city ?? '',
-        country: address.country ?? 'US',
-        postalCode: address.postalCode ?? '',
-      });
+      // await api.addAddress(userInfo.id, currentVersion, {
+      //   key: `address-${Date.now().toString()}`,
+      //   streetName: address.streetName ?? '',
+      //   city: address.city ?? '',
+      //   country: address.country ?? 'US',
+      //   postalCode: address.postalCode ?? '',
+      // });
       await refreshUser();
       toaster.add({
         name: 'address-added',
@@ -47,17 +44,17 @@ export function UserContent({ userInfo }: { userInfo: UserData }) {
     }
   };
 
-  const handleAddressUpdated = async (addressId: string, address: Partial<Address>): Promise<void> => {
+  const handleAddressUpdated = async (/*addressId: string, address: Partial<Address>*/): Promise<void> => {
     try {
-      const customerData = await customerAPI.apiRoot().me().get().execute();
-      const currentVersion = customerData.body.version;
+      // const customerData = await customerAPI.apiRoot().me().get().execute();
+      // const currentVersion = customerData.body.version;
 
-      await api.updateAddress(userInfo.id, currentVersion, addressId, {
-        streetName: address.streetName,
-        city: address.city,
-        country: address.country ?? 'US',
-        postalCode: address.postalCode,
-      });
+      // await api.updateAddress(userInfo.id, currentVersion, addressId, {
+      //   streetName: address.streetName,
+      //   city: address.city,
+      //   country: address.country ?? 'US',
+      //   postalCode: address.postalCode,
+      // });
       await refreshUser();
       toaster.add({
         name: 'address-updated',

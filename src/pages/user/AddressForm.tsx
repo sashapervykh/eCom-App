@@ -1,4 +1,3 @@
-import { Address } from '@commercetools/platform-sdk';
 import { Button, TextInput, Select, useToaster } from '@gravity-ui/uikit';
 import { useState } from 'react';
 import styles from './style.module.css';
@@ -6,6 +5,13 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { isValidPostalCode } from '../../utilities/validation-config/validation-functions/is-valid-postal-code';
+
+interface Address {
+  streetName: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
 
 const addressSchema = z
   .object({

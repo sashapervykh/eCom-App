@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { useToaster } from '@gravity-ui/uikit';
-import { api } from '../../api/api';
-import { customerAPI } from '../../api/customer-api';
 import { useAuth } from '../../components/hooks/useAuth';
 import { UserData } from '../../libs/supabase/types';
 
@@ -9,9 +7,11 @@ export function usePasswordChange(userInfo: UserData) {
   const { refreshUser /* login */ } = useAuth();
   const toaster = useToaster();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log(userInfo);
 
   const handlePasswordChange = async (currentPassword: string, newPassword: string) => {
     setIsSubmitting(true);
+    console.log(Number(currentPassword), Number(newPassword));
     try {
       // const tokenResponse = await api.getAccessToken({
       //   email: userInfo.email,
@@ -24,15 +24,15 @@ export function usePasswordChange(userInfo: UserData) {
 
       // customerAPI.createAuthenticatedCustomer(tokenResponse.token_type, tokenResponse.access_token);
 
-      const customerData = await customerAPI.apiRoot().me().get().execute();
-      const currentVersion = customerData.body.version;
+      // const customerData = await customerAPI.apiRoot().me().get().execute();
+      // const currentVersion = customerData.body.version;
 
-      await api.changePassword({
-        id: userInfo.id,
-        version: currentVersion,
-        currentPassword,
-        newPassword,
-      });
+      // await api.changePassword({
+      //   id: userInfo.id,
+      //   version: currentVersion,
+      //   currentPassword,
+      //   newPassword,
+      // });
 
       // await login(userInfo.email, newPassword, true);
       await refreshUser();

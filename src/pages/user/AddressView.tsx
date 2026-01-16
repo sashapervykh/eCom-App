@@ -1,7 +1,13 @@
 import { Button, TextInput } from '@gravity-ui/uikit';
-import { Address } from '@commercetools/platform-sdk';
 import { useState } from 'react';
 import styles from './style.module.css';
+
+interface Address {
+  streetName: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
 
 export function AddressView({
   address,

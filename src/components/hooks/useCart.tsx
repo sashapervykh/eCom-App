@@ -7,14 +7,16 @@ import {
   BasketItem,
   // getFullCartInfo,
   deleteCart,
-  addPromoCodeCart,
+  // addPromoCodeCart,
   checkPromoCodeExistence,
   // getPromoCodeByID,
   removePromoCodeByID,
 } from '../../utilities/return-basket-items';
 // import { formatPrice } from '../../utilities/format-price';
-import { Image } from '@commercetools/platform-sdk';
+
 import { CartItem, cartService } from '../../services/cart.service';
+
+type Image = [];
 
 type RemovingType = Record<string, boolean>;
 type ChangingType = Record<string, boolean | number>;
@@ -104,15 +106,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setProductsInCartAmount(cart.length);
   };
 
-  const addPromoCode = async (cartId: string, version: number, promo: string) => {
+  const addPromoCode = async (/*cartId: string, version: number,*/ promo: string) => {
     const isPromoExist = await checkPromoCodeExistence(promo);
-    if (isPromoExist) {
-      setIsDiscountInProcess(true);
-      await addPromoCodeCart(cartId, version, promo);
-      await getCartPageData();
-      setIsDiscountInProcess(false);
-      return;
-    } else if (isPromoExist === false) {
+    // if (isPromoExist) {
+    //   setIsDiscountInProcess(true);
+    // await addPromoCodeCart(cartId, version, promo);
+    //   await getCartPageData();
+    //   setIsDiscountInProcess(false);
+    //   return;
+    // } else
+    if (isPromoExist === false) {
       setIsDiscountInProcess(false);
       return 'This code does not exist';
     } else {

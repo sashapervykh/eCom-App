@@ -6,12 +6,12 @@ import { Breadcrumbs } from '../breadcrumbs/breadcrumbs';
 import { ProductsList } from './product/products';
 import { FiltersControls } from './filters-content/filters-controls';
 import { useProducts } from '../../../../components/hooks/useProducts';
-import { returnCategoryData, CategoryData } from '../../../../utilities/return-category-data';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { NotFoundPage } from '../../../404/not-found';
 import { Pagination } from './pagination';
 import { categoryService } from '../../../../services/category.service';
+import { Category } from '../../../../libs/supabase/types';
 
 export function CatalogContent({
   categoryKey: propertyCategoryKey,
@@ -44,8 +44,8 @@ export function CatalogContent({
     criteriaData,
   } = useProducts();
   const lastCriteriaReference = useRef<string | null>(null);
-  const [categoryData, setCategoryData] = useState<CategoryData | null>(null);
-  const [subcategoryData, setSubcategoryData] = useState<CategoryData | null>(null);
+  const [categoryData, setCategoryData] = useState<Category | null>(null);
+  const [subcategoryData, setSubcategoryData] = useState<Category | null>(null);
   const [_, setIsCategoryLoading] = useState<boolean>(false);
 
   const itemsPerPage = 9;
@@ -61,8 +61,8 @@ export function CatalogContent({
           setCategoryData(null);
         }
         if (subcategoryKey) {
-          const data = await returnCategoryData(subcategoryKey);
-          setSubcategoryData(data);
+          // const data = await returnCategoryData(subcategoryKey);
+          // setSubcategoryData(data);
         } else {
           setSubcategoryData(null);
         }

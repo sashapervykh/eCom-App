@@ -1,9 +1,15 @@
-import { Address } from '@commercetools/platform-sdk';
 import { Button, Card, Checkbox, Text } from '@gravity-ui/uikit';
 import styles from './style.module.css';
 import { useState } from 'react';
 import { AddressForm } from './AddressForm';
 import { UserData } from '../../libs/supabase/types';
+
+interface Address {
+  streetName: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
 
 interface AddressListProps {
   customer: UserData;

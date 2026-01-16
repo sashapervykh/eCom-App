@@ -39,13 +39,13 @@ export function ProfileEditForm({ userInfo, onCancel }: { userInfo: UserData; on
     },
   });
 
-  const onSubmit = handleSubmit(async (data) => {
-    await handleProfileSubmit({
+  const onSubmit = handleSubmit(async (/*data*/) => {
+    await handleProfileSubmit(/*{
       email: data.email ?? '',
       firstName: data.firstName ?? '',
       lastName: data.lastName ?? '',
       dateOfBirth: data.dateOfBirth ?? '',
-    });
+    }*/);
   });
 
   return (
