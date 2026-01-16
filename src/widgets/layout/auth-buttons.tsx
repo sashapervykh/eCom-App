@@ -1,7 +1,7 @@
 import { Button } from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { CartButton } from '../cart-button/cart-button';
+import { useAuth } from '../../components/hooks/useAuth';
+import { CartButton } from '../../components/cart-button/cart-button';
 
 export const AuthButtons = ({ mobile = false }: { mobile?: boolean }) => {
   const { isAuthenticated, logout, userInfo } = useAuth();
