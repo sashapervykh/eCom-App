@@ -13,7 +13,7 @@ export function AmountController({ product }: { product: CartItem }) {
   });
   const [operation, setOperation] = useState<'plus' | 'minus' | undefined>(undefined);
   const {
-    addToCart,
+    updateProductQuantity,
     removeFromCart,
     setRemovingProducts,
     removingProducts,
@@ -21,7 +21,6 @@ export function AmountController({ product }: { product: CartItem }) {
     getCartPageData,
   } = useCart();
 
-  const [previousAmount, setPreviousAmount] = useState<number>(product.quantity);
   const [isRemoving, setIsRemoving] = useState<boolean | undefined>(removingProducts[product.id]);
 
   const handelAmountChange = () => {
@@ -53,18 +52,13 @@ export function AmountController({ product }: { product: CartItem }) {
   const onSubmit = async () => {
     const currentAmount = getValues('amount');
     if (currentAmount === 0) {
-      await removeFromCart(Number(product.id));
+      await removeFromCart(product.product_id);
       await getCartPageData();
       return;
     }
-    const difference = currentAmount - previousAmount;
-    if (difference > 0) {
-      await addToCart(Number(product.id), difference);
-      setPreviousAmount(currentAmount);
-    } else if (difference < 0) {
-      await removeFromCart(Number(product.id), Math.abs(difference));
-      setPreviousAmount(currentAmount);
-    }
+
+    await updateProductQuantity(product.id, currentAmount);
+
     await getCartPageData();
   };
 
