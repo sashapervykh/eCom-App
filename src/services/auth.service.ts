@@ -1,4 +1,4 @@
-import { supabase } from '../libs/supabase/client';
+import { supabase } from '../shared/api/client';
 
 class AuthService {
   async updateSession() {

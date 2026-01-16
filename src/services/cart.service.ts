@@ -1,4 +1,4 @@
-import { supabase } from '../libs/supabase/client';
+import { supabase } from '../shared/api/client';
 import { v4 as uuidv4 } from 'uuid';
 import { Product } from '../libs/supabase/types';
 

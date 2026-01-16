@@ -1,5 +1,5 @@
 import { DEVELOPERS_NAMES } from '../constants/constants';
-import { supabase } from '../libs/supabase/client';
+import { supabase } from '../shared/api/client';
 import { Product } from '../libs/supabase/types';
 
 class ProductService {

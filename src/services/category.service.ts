@@ -1,4 +1,4 @@
-import { supabase } from '../libs/supabase/client';
+import { supabase } from '../shared/api/client';
 import { Category } from '../libs/supabase/types';
 
 class CategoryService {
