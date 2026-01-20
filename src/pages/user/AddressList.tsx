@@ -2,7 +2,7 @@ import { Button, Card, Checkbox, Text } from '@gravity-ui/uikit';
 import styles from './style.module.css';
 import { useState } from 'react';
 import { AddressForm } from './AddressForm';
-import { UserData } from '../../libs/supabase/types';
+import { UserData } from '../../features/auth/model/auth.types';
 
 interface Address {
   streetName: string;

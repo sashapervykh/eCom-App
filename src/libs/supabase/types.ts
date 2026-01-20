@@ -27,22 +27,3 @@ export interface ProductToDisplay extends Product {
     Floors: number;
   };
 }
-
-export interface UserData {
-  id: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  dateOfBirth?: string;
-  addresses: Address[];
-  sameAddress: boolean;
-  setAsDefaultShipping: boolean;
-  setAsDefaultBilling: boolean;
-}
-interface Address {
-  id: string;
-  streetName: string;
-  city: string;
-  country: string;
-  postalCode: string;
-}

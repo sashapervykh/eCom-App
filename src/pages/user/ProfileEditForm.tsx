@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registrationSchema } from '../../utilities/validation-config/validation-rules';
 import { z } from 'zod';
 import { useProfileForm } from './useProfileForm';
-import { UserData } from '../../libs/supabase/types';
+import { UserData } from '../../features/auth/model/auth.types';
 
 export function ProfileEditForm({ userInfo, onCancel }: { userInfo: UserData; onCancel: () => void }) {
   const { handleSubmit: handleProfileSubmit, isSubmitting } = useProfileForm(userInfo);

@@ -1,6 +1,6 @@
 import { PageWrapper } from '../../components/page-wrapper/page-wrapper';
+import { useAuth } from '../../features/auth/model/useAuth';
 import styles from './style.module.css';
-import { useAuth } from '../../components/hooks/useAuth';
 
 export function HomePage() {
   const { userInfo } = useAuth();

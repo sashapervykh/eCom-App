@@ -11,8 +11,8 @@ import { registrationSchema } from '../../utilities/validation-config/validation
 import { Navigate, useNavigate } from 'react-router';
 import { PageWrapper } from '../../components/page-wrapper/page-wrapper';
 import { NavigationButton } from '../../components/navigation-button/navigation-button';
-import { useAuth } from '../../components/hooks/useAuth';
-import { authService } from '../../services/auth.service';
+import { useAuth } from '../../features/auth/model/useAuth';
+import { authService } from '../../features/auth/api/auth.service';
 
 export function RegistrationPage() {
   const { /* login,*/ isAuthenticated, saveUserInfo } = useAuth();

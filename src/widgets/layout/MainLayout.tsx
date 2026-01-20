@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import styles from './layout.module.css';
 import { AuthButtons } from './auth-buttons';
 import { CatalogMenuButton } from '../../components/navigation-button/catalog-button';
-import { useAuth } from '../../components/hooks/useAuth';
 import { useCategories } from '../../components/hooks/useCategories';
 import { catalogItems } from '../../utilities/return-catalog-items';
 import { Footer } from '../../components/footer/footer';
 import { CartButton } from '../../components/cart-button/cart-button';
+import { useAuth } from '../../features/auth/model/useAuth';
 
 const navLinks = [
   { text: 'Home', route: '/' },

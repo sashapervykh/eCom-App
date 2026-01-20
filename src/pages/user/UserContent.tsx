@@ -5,8 +5,8 @@ import { ProfileView } from './ProfileView';
 import { ProfileEditForm } from './ProfileEditForm';
 import { PasswordChangeForm } from './PasswordChangeForm';
 import { AddressList } from './AddressList';
-import { useAuth } from '../../components/hooks/useAuth';
-import { UserData } from '../../libs/supabase/types';
+import { UserData } from '../../features/auth/model/auth.types';
+import { useAuth } from '../../features/auth/model/useAuth';
 
 export function UserContent({ userInfo }: { userInfo: UserData }) {
   const { refreshUser } = useAuth();

@@ -9,9 +9,9 @@ import { schema } from '../../utilities/validation-config/validation-rules';
 import { ChangeEvent } from 'react';
 import styles from './style.module.css';
 import { Routes } from '../../components/navigation-button/type';
-import { useAuth } from '../../components/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../features/auth/api/auth.service';
+import { useAuth } from '../../features/auth/model/useAuth';
 
 const loginSchema = schema.pick({ email: true, password: true });
 

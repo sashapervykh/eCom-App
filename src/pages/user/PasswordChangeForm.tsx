@@ -3,7 +3,7 @@ import { usePasswordValidation } from './password-validation';
 import { usePasswordChange } from './usePasswordChange';
 import styles from './style.module.css';
 import { forwardRef } from 'react';
-import { UserData } from '../../libs/supabase/types';
+import { UserData } from '../../features/auth/model/auth.types';
 
 const CustomPasswordInput = forwardRef<HTMLInputElement, React.ComponentProps<typeof PasswordInput>>(
   (props, reference) => <PasswordInput {...props} controlRef={reference} />,

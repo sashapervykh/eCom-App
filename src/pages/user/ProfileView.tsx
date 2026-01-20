@@ -1,5 +1,5 @@
+import { UserData } from '../../features/auth/model/auth.types';
 import styles from './style.module.css';
-import { UserData } from '../../libs/supabase/types';
 
 export function ProfileView({ userInfo }: { userInfo: UserData }) {
   return (

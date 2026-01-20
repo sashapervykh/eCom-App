@@ -1,28 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-// import { api } from '../../api/api';
-// import { isErrorResponse, isTokenResponse } from '../../utilities/return-checked-token-response';
-// import { customerAPI } from '../../api/customer-api';
-// import { useNavigate } from 'react-router-dom';
-// import { mergeCarts } from '../../utilities/return-basket-items';
+import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { UserData } from '../../libs/supabase/types';
-import { authService } from '../../services/auth.service';
-
-interface AuthContextType {
-  userInfo: UserData | null;
-  isAuthenticated: boolean;
-  // login: (email: string, password: string, preventRedirect?: boolean) => Promise<void>;
-  refresh: (refresh_token: string) => void;
-
-  logout: () => void;
-  serverError: string | null;
-  setServerError: React.Dispatch<React.SetStateAction<string | null>>;
-  isLoading: boolean;
-  refreshUser: () => Promise<void>;
-  saveUserInfo: (user: User) => void;
-}
-
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+import { UserData } from './auth.types';
+import { authService } from '../api/auth.service';
+import { AuthContext } from './auth.context';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
@@ -160,7 +140,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isAuthenticated: !!userInfo,
     userInfo,
     // login,
-
     refresh,
     logout,
     serverError,
@@ -172,5 +151,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <AuthContext.Provider value={authContextValue}>{children}</AuthContext.Provider>;
 };
-
-export const useAuth = () => useContext(AuthContext);

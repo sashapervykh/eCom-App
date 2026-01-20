@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useToaster } from '@gravity-ui/uikit';
-import { useAuth } from '../../components/hooks/useAuth';
-import { UserData } from '../../libs/supabase/types';
+import { UserData } from '../../features/auth/model/auth.types';
+import { useAuth } from '../../features/auth/model/useAuth';
 
 export function usePasswordChange(userInfo: UserData) {
   const { refreshUser /* login */ } = useAuth();

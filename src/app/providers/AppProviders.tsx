@@ -1,9 +1,10 @@
 import { ThemeProvider, Toaster, ToasterProvider } from '@gravity-ui/uikit';
 import { ReactNode } from 'react';
-import { AuthProvider } from '../../components/hooks/useAuth';
+
 import { CartProvider } from '../../components/hooks/useCart';
 import { FiltersProvider } from '../../components/hooks/useFilters';
 import { ProductsProvider } from '../../components/hooks/useProducts';
+import { AuthProvider } from '../../features/auth/model/auth.provider';
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (

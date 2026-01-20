@@ -1,8 +1,8 @@
 import { PageWrapper } from '../../components/page-wrapper/page-wrapper';
-import { useAuth } from '../../components/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import styles from './style.module.css';
 import { UserContent } from './UserContent';
+import { useAuth } from '../../features/auth/model/useAuth';
 
 export function UserPage() {
   const { isAuthenticated, userInfo } = useAuth();
