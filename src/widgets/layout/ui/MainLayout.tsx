@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Button, Loader } from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
-import styles from './layout.module.css';
+import styles from './MainLayout.module.css';
 import { AuthButtons } from './auth-buttons';
-import { CatalogMenuButton } from '../../components/navigation-button/catalog-button';
-import { useCategories } from '../../components/hooks/useCategories';
-import { catalogItems } from '../../utilities/return-catalog-items';
-import { Footer } from '../../components/footer/footer';
-import { CartButton } from '../../components/cart-button/cart-button';
-import { useAuth } from '../../features/auth/model/useAuth';
+import { CatalogMenuButton } from '../../../components/navigation-button/catalog-button';
+import { useCategories } from '../../../components/hooks/useCategories';
+import { catalogItems } from '../../../utilities/return-catalog-items';
+
+import { CartButton } from '../../../components/cart-button/cart-button';
+import { useAuth } from '../../../features/auth/model/useAuth';
+import { Footer } from './Footer';
 
 const navLinks = [
   { text: 'Home', route: '/' },
